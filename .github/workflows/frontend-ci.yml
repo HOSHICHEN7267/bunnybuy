@@ -1,12 +1,16 @@
-name: Backend Build
+name: Frontend CI
 
 on:
   push:
+    branches:
+      - develop
     paths:
-      - 'backend/**'
+      - 'frontend/**'
   pull_request:
+    branches:
+      - develop
     paths:
-      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
   build:
@@ -17,6 +21,6 @@ jobs:
         with:
           node-version: 18
       - run: |
-          cd backend
+          cd frontend
           npm install
           npm run build
