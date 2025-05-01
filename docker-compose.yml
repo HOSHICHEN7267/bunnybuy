@@ -1,0 +1,40 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: bunnybuy-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: bunnybuydb
+      MYSQL_USER: bunnybuy
+      MYSQL_PASSWORD: bunnybuy123
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+    container_name: bunnybuy-backend
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: bunnybuy
+      DB_PASSWORD: bunnybuy123
+      DB_DATABASE: bunnybuydb
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: bunnybuy-frontend
+    ports:
+      - '8080:80'
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
