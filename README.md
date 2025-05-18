@@ -111,3 +111,93 @@ docker compose up --build
 ✅ 完成後開 PR 合併回 `develop`
 
 ---
+
+## 🧑‍💻 Frontend 開發流程（前端開發者專區）
+
+此專區提供給開發前端（React + Vite）的成員使用，方便快速啟動開發與測試流程。
+
+---
+
+### 📁 前提條件
+
+請先在專案根目錄執行以下指令，確保安裝過必要依賴：
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+### 🏃‍♂️ 啟動本地開發伺服器
+
+```bash
+npm run dev
+```
+
+* 此指令會啟動 Vite 開發伺服器，預設會運行在：
+  👉 [http://localhost:5173](http://localhost:5173)
+* 此模式支援 **Hot Module Reloading (HMR)**，你修改檔案後頁面會即時更新。
+
+---
+
+### 🔗 串接後端 API（可選）
+
+若需要串接後端（NestJS，[http://localhost:3000），請在](http://localhost:3000），請在) `vite.config.ts` 加入以下設定：
+
+```ts
+// frontend/vite.config.ts
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
+  },
+});
+```
+
+這樣當你在前端呼叫 `/api/xxx` 時，會自動代理轉發到後端。
+
+---
+
+### 🧪 開發完成後打包
+
+```bash
+npm run build
+```
+
+這會把所有資源打包到 `frontend/dist/`，供 Docker 或伺服器部署使用。
+
+---
+
+### 📦 整合進 Docker 重新測試
+
+開發完成後可重新打包並整合：
+
+```bash
+npm run build
+cd ..
+docker compose up --build
+```
+
+然後用 `http://localhost:8080` 瀏覽部署後的版本。
+
+---
+
+### 🛠 快速指令總表
+
+| 指令                          | 說明                  |
+| --------------------------- | ------------------- |
+| `npm run dev`               | 開發模式，localhost:5173 |
+| `npm run build`             | 打包 production 版本    |
+| `docker compose up --build` | 重建並測試整合後效果          |
+
+---
+
+### ✅ 前端開發者：Push 與 Build 的建議頻率
+
+| 行為               | 建議頻率                                   | 原因與實務建議                                                                    |
+| ---------------- | -------------------------------------- | -------------------------------------------------------------------------- |
+| **Git push**     | ✅ **每天至少一次 / 每完成一段功能後**                | 保持進度同步，減少 merge 衝突。建議功能導向 push：完成一個 section、按鈕、頁面等，就 push 到 `feature/xxx`。 |
+| **Pull Request** | ✅ **每 1～2 天一次或完成一個小任務後**               | 把 `feature/xxx` 的進度合併到 `develop`，以利整合測試。                                   |
+| **Docker build** | ✅ **合併到 develop 或 main 前** 才需要手動 build | 本地用 `npm run dev` 開發即可，只有在要驗證整合（或推給其他人看）才需要 `docker compose up --build`。   |
