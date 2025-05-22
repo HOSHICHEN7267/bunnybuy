@@ -2,6 +2,7 @@
 import './App.css'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import HeaderSlider from './components/HeaderSlider'
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -9,6 +10,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <HeaderSlider />
 
       {/* Dummy Contents */}
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
