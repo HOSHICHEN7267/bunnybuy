@@ -41,7 +41,7 @@ const HeaderSlider = () => {
     return () => clearInterval(interval);
   }, [sliderData.length]);
 
-  const handleSlideChange = (index) => {
+  const handleSlideChange = (index: number) => {
     setCurrentSlide(index);
   };
 
