@@ -27,6 +27,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-6 text-sm">
           <Link to="/" className="hover:text-pink-500">首頁</Link>
           <Link to="/all-products" className="hover:text-pink-500">商品總覽</Link>
+          <Link to="/order-pool" className="hover:text-pink-500">訂單總覽</Link>
           <Link to="/about" className="hover:text-pink-500">關於我們</Link>
           <Link to="/contact" className="hover:text-pink-500">聯絡我們</Link>
         </div>
