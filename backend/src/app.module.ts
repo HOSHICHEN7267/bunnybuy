@@ -14,6 +14,7 @@ import { PurchaseAssignment } from './entities/purchase-assignment.entity';
 import { Review } from './entities/review.entity';
 
 import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UserModule } from './user/user.module';
     }),
 
     UserModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
