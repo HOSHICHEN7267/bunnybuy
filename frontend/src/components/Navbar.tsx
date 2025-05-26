@@ -1,14 +1,20 @@
 "use client";
 import { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import AuthModal from "./AuthModal";
 import logo from '../assets/logo.png';
-import { Link } from 'react-router-dom';
+import user_icon from '../assets/user_icon.svg';
 
 const Navbar = () => {
+  
   const [showModal, setShowModal] = useState(false);
-//   const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleModal = () => setShowModal((prev) => !prev);
+  const handleLogin = () => {
+    setIsLoggedIn(true);       // ✅ 切換登入狀態
+    setShowModal(false);       // ✅ 關閉 modal
+  };
 
   return (
     <>
@@ -33,16 +39,29 @@ const Navbar = () => {
         </div>
 
         {/* 登入按鈕 */}
-        <button
-          onClick={toggleModal}
-          className="text-sm border px-4 py-1.5 rounded-full hover:bg-pink-100 transition"
-        >
-          登入 / 註冊
-        </button>
+        <div className="flex items-center">
+          {isLoggedIn ? (
+            <img
+              src={user_icon}
+              alt="Cart"
+              className="w-6 h-6 cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          ) : (
+            <button
+              onClick={() => setShowModal(true)}
+              className="text-sm border px-4 py-1.5 rounded-full hover:bg-pink-100 transition"
+            >
+              登入 / 註冊
+            </button>
+          )}
+        </div>
       </nav>
 
       {/* 浮動登入視窗 */}
-      {showModal && <AuthModal onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <AuthModal onClose={() => setShowModal(false)} onLogin={handleLogin} />
+      )}
     </>
   );
 };
