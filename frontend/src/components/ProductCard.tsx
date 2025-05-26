@@ -3,7 +3,20 @@ import heart_icon from '../assets/heart_icon.svg';
 import star_icon from '../assets/star_icon.svg';
 import star_dull_icon from '../assets/star_dull_icon.svg';
 
-const ProductCard = ({ product }) => {
+interface Product {
+  product_id: string;
+  provider_id: string;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  stock: number;
+  status: string;
+  created_at: string;
+  image: string[];
+}
+
+const ProductCard = ({ product }: { product: Product }) => {
 
     // const router = useRouter();
     const currency = "NT$";
@@ -51,7 +64,7 @@ const ProductCard = ({ product }) => {
             </div>
 
             <div className="flex items-end justify-between w-full mt-1">
-                <p className="text-base font-medium">{currency}{product.offerPrice}</p>
+                <p className="text-base font-medium">{currency}{product.price}</p>
                 <button className=" max-sm:hidden px-4 py-1.5 text-gray-500 border border-gray-500/20 rounded-full text-xs hover:bg-slate-50 transition">
                     Buy now
                 </button>
