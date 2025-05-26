@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import AllProducts from './pages/AllProducts';
 import ProductDetail from './pages/ProductDetail';
 import OrderListView from './pages/OrderListView';
+import Cart from './pages/Cart';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -18,9 +19,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         {/* <Route path="/order-pool" element={<OrderPoolPage />} /> */}
         {/* <Route path="/order-details/:requestId" element={<OrderDetailsPage />} /> */}
+        <Route path="/order-list" element={<OrderListView />} />
         <Route path="/all-products" element={<AllProducts />} />
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
-        <Route path="/order-list" element={<OrderListView />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </>
   )
