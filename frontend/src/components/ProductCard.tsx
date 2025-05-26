@@ -19,7 +19,6 @@ interface Product {
 const ProductCard = ({ product }: { product: Product }) => {
 
     const navigate = useNavigate();
-    const currency = "NT$";
 
     return (
         <div
@@ -64,7 +63,12 @@ const ProductCard = ({ product }: { product: Product }) => {
             </div>
 
             <div className="flex items-end justify-between w-full mt-1">
-                <p className="text-base font-medium">{currency}{product.price}</p>
+                <p className="text-base font-semibold mt-6 text-left">
+                    ${product.discount}
+                    <span className="text-sm font-normal text-gray-800/60 line-through ml-3">
+                        ${product.price}
+                    </span>
+                </p>
                 <button className=" max-sm:hidden px-4 py-1.5 text-gray-500 border border-gray-500/20 rounded-full text-xs hover:bg-slate-50 transition">
                     Buy now
                 </button>
