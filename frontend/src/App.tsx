@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import OrderPoolPage from './pages/OrderPoolPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
 import AllProducts from './pages/AllProducts';
+import ProductDetail from './pages/ProductDetail';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -17,6 +18,7 @@ function App() {
         <Route path="/order-pool" element={<OrderPoolPage />} />
         <Route path="/order-details/:requestId" element={<OrderDetailsPage />} />
         <Route path="/all-products" element={<AllProducts />} />
+        <Route path="/product-detail/:productId" element={<ProductDetail />} />
       </Routes>
     </>
   )

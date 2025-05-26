@@ -5,55 +5,55 @@ import Footer from "../components/Footer";
 const AllProducts = () => {
 
   const products = [
-    {
+      {
       product_id: "1",
       provider_id: "",
       name: "Bulbasaur",
       description: "Description for Bulbasaur",
       price: 100,
-      discount: 100,
+      discount: 99,
       stock: 100,
       status: "available",
       created_at: "",
-      image: ["/product/Bulbasaur.png"],
-    },
-    {
+      image: ["/products/Bulbasaur.png"],
+      },
+      {
       product_id: "2",
       provider_id: "",
       name: "Charmander",
       description: "Description for Charmander",
       price: 200,
-      discount: 200,
+      discount: 199,
       stock: 100,
       status: "available",
       created_at: "",
-      image: ["/product/Charmander.png"],
-    },
-    {
+      image: ["/products/Charmander.png"],
+      },
+      {
       product_id: "3",
       provider_id: "",
       name: "Squirtle",
       description: "Description for Squirtle",
       price: 300,
-      discount: 300,
+      discount: 299,
       stock: 100,
       status: "available",
       created_at: "",
-      image: ["/product/Squirtle.png"],
-    },
-    {
+      image: ["/products/Squirtle.png"],
+      },
+      {
       product_id: "4",
       provider_id: "",
       name: "Mew",
       description: "Description for Mew",
       price: 500,
-      discount: 500,
+      discount: 499,
       stock: 100,
       status: "available",
       created_at: "",
-      image: ["/product/Mew.png"],
-    },
-    // Add more products as needed
+      image: ["/products/Mew.png"],
+      },
+      // Add more products as needed
   ]
   
   return (

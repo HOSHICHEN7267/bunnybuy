@@ -1,4 +1,4 @@
-// import { useRouter } from "next/router";
+import { useNavigate } from 'react-router-dom';
 import heart_icon from '../assets/heart_icon.svg';
 import star_icon from '../assets/star_icon.svg';
 import star_dull_icon from '../assets/star_dull_icon.svg';
@@ -18,13 +18,13 @@ interface Product {
 
 const ProductCard = ({ product }: { product: Product }) => {
 
-    // const router = useRouter();
+    const navigate = useNavigate();
     const currency = "NT$";
 
     return (
         <div
-            // onClick={() => { router.push('/product/' + product._id); scrollTo(0, 0) }}
-            // className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer"
+            onClick={() => { navigate(`/product-detail/${product.product_id}`); scrollTo(0, 0) }}
+            className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer"
         >
             <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center">
                 <img
