@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from "../components/Navbar";
+import HeaderSlider from "../components/HeaderSlider";
+import Footer from "../components/Footer";
 
 interface PurchaseRequest {
   request_id: string;
@@ -32,24 +35,29 @@ const OrderPoolPage = () => {
   }, []);
 
   return (
-    <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4">採購需求池</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {requests.map((req) => (
-          <div
-            key={req.request_id}
-            className="p-4 border rounded shadow hover:bg-pink-50 cursor-pointer hover:text-black"
-            onClick={() => navigate(`/order-details/${req.request_id}`)}
-          >
-            <h3 className="font-bold">商品 ID: {req.product_id}</h3>
-            <p>數量: {req.quantity}</p>
-            <p>總價: ${req.total_price}</p>
-            <p>狀態: {req.status}</p>
-            <p>建立時間: {new Date(req.created_at).toLocaleString()}</p>
-          </div>
-        ))}
+    <>
+      <Navbar />
+      <HeaderSlider />
+      <div className="p-8">
+        <h2 className="text-2xl font-bold mb-4">採購需求池</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {requests.map((req) => (
+            <div
+              key={req.request_id}
+              className="p-4 border rounded shadow hover:bg-pink-50 cursor-pointer hover:text-black"
+              onClick={() => navigate(`/order-details/${req.request_id}`)}
+            >
+              <h3 className="font-bold">商品 ID: {req.product_id}</h3>
+              <p>數量: {req.quantity}</p>
+              <p>總價: ${req.total_price}</p>
+              <p>狀態: {req.status}</p>
+              <p>建立時間: {new Date(req.created_at).toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
