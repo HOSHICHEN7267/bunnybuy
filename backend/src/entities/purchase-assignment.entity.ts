@@ -1,3 +1,4 @@
+// bunnybuy\backend\src\entities\purchase-assignment.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('purchase_assignments')

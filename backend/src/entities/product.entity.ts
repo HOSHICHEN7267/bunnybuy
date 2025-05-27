@@ -1,3 +1,4 @@
+// bunnybuy\backend\src\entities\product.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('products')

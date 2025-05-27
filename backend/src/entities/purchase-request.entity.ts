@@ -1,3 +1,4 @@
+// bunnybuy\backend\src\entities\purchase-request.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('purchase_requests')
