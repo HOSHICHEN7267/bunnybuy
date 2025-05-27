@@ -5,12 +5,15 @@ import logoutIcon from "../assets/logout.png";
 import avatarImg from "../assets/user_icon.svg";
 import bunwo from "../assets/bunwo.png";
 import bunny from "../assets/bunny.png";
-import profileIcon from "../assets/profile_icon.jpg"; // ✅ 建議你新增一個個人頁面的 icon
+import profileIcon from "../assets/profile_icon.jpg";
+import { useAuth } from "../contexts/AuthContext"; // ✅ 使用 AuthContext
 
 const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const menuRef = useRef(null);
+
+  const { user } = useAuth(); // ✅ 取得登入的使用者資訊
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -33,16 +36,20 @@ const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
 
       {open && (
         <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-xl z-50 py-2 border">
+          {/* ✅ 使用登入者資訊 */}
           <div className="px-4 py-2 border-b">
-            <p className="font-medium text-sm text-gray-800">UserName</p>
-            <p className="text-xs text-gray-500">UserEmail@gmail.com</p>
+            <p className="font-medium text-sm text-gray-800">
+              {user?.username || "使用者"}
+            </p>
+            <p className="text-xs text-gray-500">
+              {user?.email || "未登入 Email"}
+            </p>
           </div>
 
-          {/* ✅ 新增個人檔案按鈕 */}
           <button
             onClick={() => {
               navigate("/profile");
-              setOpen(false); // 點擊後關閉選單
+              setOpen(false);
             }}
             className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
           >
