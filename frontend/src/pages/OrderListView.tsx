@@ -4,22 +4,7 @@ import Footer from "../components/Footer";
 
 import { useNavigate } from "react-router-dom";
 
-interface Order {
-    request_id: string,
-    buyer_id: string,
-    products: {
-        product_id: string,
-        name: string,
-        quantity: number,
-        price: number,
-        discount: number,
-        image: string[],
-    }[],
-    total_price: number,
-    payment: string,
-    created_at: string,
-    status: string,
-}
+
 
 {/*  import { Order } from "../interfaces"; */}
 
