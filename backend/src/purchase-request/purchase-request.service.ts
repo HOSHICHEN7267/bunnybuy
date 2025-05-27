@@ -3,8 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PurchaseRequest } from '../entities/purchase-request.entity';
-import { CreatePurchaseRequestDto, UpdatePurchaseRequestDto } from './dto/purchase-request.dto';
-
+import {
+  CreatePurchaseRequestDto,
+  UpdatePurchaseRequestDto,
+} from './dto/purchase-request.dto';
 
 @Injectable()
 export class PurchaseRequestService {
@@ -13,16 +15,16 @@ export class PurchaseRequestService {
     private readonly repo: Repository<PurchaseRequest>,
   ) {}
 
-  create(data: CreatePurchaseRequestDto) {
-    // 如果 product.status 沒填，預設為 "待處理"
-    const productWithStatus = {
-      ...data.product,
-      status: data.product.status ?? '待處理',
-    };
+  async create(data: CreatePurchaseRequestDto) {
+    const productsWithStatus = data.products.map(p => ({
+      ...p,
+      status: p.status ?? '待處理',
+    }));
 
     const entity = this.repo.create({
       ...data,
-      product: productWithStatus,
+      products: productsWithStatus,
+      status: data.status ?? '待處理',
     });
 
     return this.repo.save(entity);
@@ -33,14 +35,24 @@ export class PurchaseRequestService {
   }
 
   findOne(id: string) {
-    return this.repo.findOneBy({ request_id: id });
+    return this.repo.findOne({
+      where: { request_id: id },
+    });
   }
 
-  update(id: string, data: UpdatePurchaseRequestDto) {
-    return this.repo.update(id, data);
+  async update(id: string, data: Partial<UpdatePurchaseRequestDto>) {
+    if (data.products) {
+      data.products = data.products.map(p => ({
+        ...p,
+        status: p.status ?? '待處理',
+      }));
+    }
+    await this.repo.update(id, data);
+    return this.findOne(id);
   }
 
   remove(id: string) {
     return this.repo.delete(id);
   }
 }
+

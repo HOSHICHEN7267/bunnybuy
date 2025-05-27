@@ -1,5 +1,10 @@
 // bunnybuy\backend\src\entities\purchase-request.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity('purchase_requests')
 export class PurchaseRequest {
@@ -9,16 +14,35 @@ export class PurchaseRequest {
   @Column()
   buyer_id: string;
 
-  @Column('json')  // 👈 這是關鍵：JSON 欄位存複合資料
-  product: {
+  @Column('json')
+  products: {
     product_id: string;
     quantity: number;
-    status: string;  // '待處理'、'進行中'、'完成'、'取消'
-  };
+    status: string;
+  }[];
 
-  @Column('decimal')
+  @Column('decimal', { precision: 10, scale: 2 })
   total_price: number;
 
   @CreateDateColumn()
   created_at: Date;
+
+  @Column()
+  payment: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['面交', '店到店'],
+  })
+  delivery_method: string;
+
+  @Column({ nullable: true })
+  delivery_address: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['待處理', '進行中', '完成', '取消'],
+    default: '待處理',
+  })
+  status: string;
 }
