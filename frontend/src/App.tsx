@@ -9,6 +9,7 @@ import AllProducts from './pages/AllProducts';
 import ProductDetail from './pages/ProductDetail';
 import OrderListView from './pages/OrderListView';
 import Cart from './pages/Cart';
+import Checkout from './pages/CheckoutPage';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -23,6 +24,7 @@ function App() {
         <Route path="/all-products" element={<AllProducts />} />
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </>
   )

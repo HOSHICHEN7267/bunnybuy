@@ -2,19 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import heart_icon from '../assets/heart_icon.svg';
 import star_icon from '../assets/star_icon.svg';
 import star_dull_icon from '../assets/star_dull_icon.svg';
-
-interface Product {
-  product_id: string;
-  provider_id: string;
-  name: string;
-  description: string;
-  price: number;
-  discount: number;
-  stock: number;
-  status: string;
-  created_at: string;
-  image: string[];
-}
+import { Product } from "../interfaces";
 
 const ProductCard = ({ product }: { product: Product }) => {
 
@@ -45,7 +33,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             <p className="md:text-base font-medium pt-2 w-full truncate">{product.name}</p>
             <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">{product.description}</p>
             <div className="flex items-center gap-2">
-                <p className="text-xs">{4.5}</p>
+                <p className="text-xs">{4/5}</p>
                 <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, index) => (
                         <img
