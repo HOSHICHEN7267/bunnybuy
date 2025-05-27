@@ -11,7 +11,7 @@ export interface Product {
   }[];
   status: string;
   created_at: string;
-  image: string[];
+  image_list: string[];
 }
 
 export interface CartItem {

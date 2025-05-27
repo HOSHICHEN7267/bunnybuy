@@ -15,7 +15,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         >
             <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center">
                 <img
-                    src={product.image[0]}
+                    src={product.image_list[0]}
                     alt={product.name}
                     className="group-hover:scale-105 transition object-contain w-4/5 h-4/5 md:w-full md:h-full"
                     width={500}
