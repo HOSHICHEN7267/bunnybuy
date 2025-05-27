@@ -7,6 +7,12 @@ export class PurchaseAssignment {
   assignment_id: string;
 
   @Column()
+  product_id: string;
+
+  @Column('int')
+  quantity: number;
+
+  @Column()
   request_id: string;
 
   @Column()

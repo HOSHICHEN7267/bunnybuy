@@ -13,8 +13,12 @@ export class PurchaseAssignmentService {
   ) {}
 
   create(data: CreatePurchaseAssignmentDto) {
-    const entity = this.repo.create({ ...data, status: data.status ?? '已接受' });
-    return this.repo.save(entity);
+    const assignment = this.repo.create({
+      ...data,
+      status: data.status ?? '已接受',  // 預設為「已接受」
+    });
+
+    return this.repo.save(assignment);
   }
 
   findAll() {

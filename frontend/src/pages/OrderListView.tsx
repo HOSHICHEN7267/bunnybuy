@@ -1,44 +1,88 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
-type OrderItem = {
-  productName: string;
-  quantity: number;
-  price: number;
-};
+interface Order {
+    request_id: string,
+    buyer_id: string,
+    products: {
+        product_id: string,
+        name: string,
+        quantity: number,
+        price: number,
+        discount: number,
+        image: string[],
+    }[],
+    total_price: number,
+    payment: string,
+    created_at: string,
+    status: string,
+}
+// type OrderItem = {
+//   productName: string;
+//   quantity: number;
+//   price: number;
+// };
 
-type Order = {
-  orderId: string;
-  customerName: string;
-  status: string;
-  total: number;
-  items: OrderItem[];
-};
+// type Order = {
+//   request_id: string;
+//   buyer_id: string;
+//   status: string;
+//   total_price: number;
+//   products: OrderItem[];
+// };
 
-const mockOrders: Order[] = [
-  {
-    orderId: "A001",
-    customerName: "Alice",
-    status: "待處理",
-    total: 499,
-    items: [
-      { productName: "Charmander", quantity: 1, price: 199 },
-      { productName: "Squirtle", quantity: 1, price: 300 },
-    ],
-  },
-  {
-    orderId: "B002",
-    customerName: "Bob",
-    status: "已完成",
-    total: 199,
-    items: [
-      { productName: "Bulbasaur", quantity: 2, price: 99 },
-    ],
-  },
+// const mockOrders: Order[] = [
+//   {
+//     orderId: "A001",
+//     customerName: "Alice",
+//     status: "待處理",
+//     total: 499,
+//     items: [
+//       { productName: "Charmander", quantity: 1, price: 199 },
+//       { productName: "Squirtle", quantity: 1, price: 300 },
+//     ],
+//   },
+//   {
+//     orderId: "B002",
+//     customerName: "Bob",
+//     status: "已完成",
+//     total: 199,
+//     items: [
+//       { productName: "Bulbasaur", quantity: 2, price: 99 },
+//     ],
+//   },
+// ];
+const myorders = [
+    {
+        request_id: "order-1",
+        buyer_id: "user-1",
+        products: [
+            { product_id: "product-1", name: "Bulbasaur", quantity: 2, price: 100, discount: 99, image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"] },
+            { product_id: "product-2", name: "Charmander", quantity: 1, price: 200, discount: 199, image: ["/products/Charmander.png", "/products/Charmeleon.png", "/products/Charizard.png"] },
+        ],
+        total_price: 100,
+        payment: "貨到付款",
+        created_at: "2023-10-01",
+        status: "待處理",
+    },
+    {
+        request_id: "order-2",
+        buyer_id: "user-1",
+        products: [
+            { product_id: "product-1", name: "Bulbasaur", quantity: 2, price: 100, discount: 99, image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"] },
+            { product_id: "product-3", name: "Squirtle", quantity: 5, price: 300, discount: 299, image: ["/products/Squirtle.png", "/products/Blastoise.png"] },
+        ],
+        total_price: 500,
+        payment: "貨到付款",
+        created_at: "2025-05-27",
+        status: "待處理",
+    },
 ];
 
 const OrderListView = () => {
+  const navigate = useNavigate();
   const [expandedOrderIds, setExpandedOrderIds] = useState<string[]>([]);
 
   const toggleExpand = (orderId: string) => {
@@ -55,27 +99,27 @@ const OrderListView = () => {
       <div className="min-h-screen bg-gray-50 px-6 md:px-16 lg:px-32 pt-12 pb-20">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">訂單總覽</h1>
         <div className="space-y-4">
-          {mockOrders.map((order) => {
-            const isExpanded = expandedOrderIds.includes(order.orderId);
+          {myorders.map((order) => {
+            const isExpanded = expandedOrderIds.includes(order.request_id);
             return (
               <div
-                key={order.orderId}
+                key={order.request_id}
                 className="border border-gray-300 rounded-lg bg-white shadow-sm transition-all"
               >
                 <button
-                  onClick={() => toggleExpand(order.orderId)}
+                  onClick={() => toggleExpand(order.request_id)}
                   className="w-full text-left p-4 flex justify-between items-center hover:bg-gray-200 bg-gray-100"
                 >
                   <div>
                     <p className="text-lg font-medium text-gray-700">
-                      訂單編號：{order.orderId}
+                      訂單編號：{order.request_id}
                     </p>
                     <p className="text-sm text-gray-500">
-                      客戶：{order.customerName} ｜ 狀態：{order.status}
+                      客戶：{order.buyer_id} ｜ 狀態：{order.status}
                     </p>
                   </div>
                   <div className="text-right text-lg text-gray-600">
-                    總金額：${order.total}
+                    總金額：${order.total_price}
                   </div>
                 </button>
 
@@ -93,15 +137,29 @@ const OrderListView = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {order.items.map((item, index) => (
+                    {order.products.map((item, index) => (
                         <tr key={index} className="border-t">
-                        <td className="py-2">{item.productName}</td>
+                        <td className="py-2">{item.name}</td>
                         <td>{item.quantity}</td>
                         <td>${item.price}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
+                <button
+                  onClick={() => {
+                    const ordersWithExtraData = myorders.map((order) => ({
+                      ...order,
+                    }));
+
+                    navigate("/order-confirmation", {
+                      state: { orders: ordersWithExtraData }, // ✅ 重點：是多筆
+                    });
+                  }}
+                  className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
+                >
+                  🛒 確認接單
+                </button>
                 </div>}
               </div>
             );

@@ -9,17 +9,15 @@ export class PurchaseRequest {
   @Column()
   buyer_id: string;
 
-  @Column()
-  product_id: string;
-
-  @Column('int')
-  quantity: number;
+  @Column('json')  // 👈 這是關鍵：JSON 欄位存複合資料
+  product: {
+    product_id: string;
+    quantity: number;
+    status: string;  // '待處理'、'進行中'、'完成'、'取消'
+  };
 
   @Column('decimal')
   total_price: number;
-
-  @Column()
-  status: string;
 
   @CreateDateColumn()
   created_at: Date;

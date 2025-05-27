@@ -14,7 +14,17 @@ export class PurchaseRequestService {
   ) {}
 
   create(data: CreatePurchaseRequestDto) {
-    const entity = this.repo.create({ ...data, status: data.status ?? '待處理' });
+    // 如果 product.status 沒填，預設為 "待處理"
+    const productWithStatus = {
+      ...data.product,
+      status: data.product.status ?? '待處理',
+    };
+
+    const entity = this.repo.create({
+      ...data,
+      product: productWithStatus,
+    });
+
     return this.repo.save(entity);
   }
 

@@ -11,6 +11,7 @@ import OrderListView from './pages/OrderListView';
 import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
 import Checkout from './pages/CheckoutPage';
+import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -27,6 +28,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
       </Routes>
     </>
   )
