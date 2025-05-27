@@ -5,13 +5,13 @@ import logoutIcon from "../assets/logout.png";
 import avatarImg from "../assets/user_icon.svg";
 import bunwo from "../assets/bunwo.png";
 import bunny from "../assets/bunny.png";
+import profileIcon from "../assets/profile_icon.jpg"; // ✅ 建議你新增一個個人頁面的 icon
 
 const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
-  // 點擊外部關閉 dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !(menuRef.current as any).contains(e.target)) {
@@ -24,7 +24,6 @@ const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* 頭像按鈕 */}
       <img
         src={avatarImg}
         alt="user"
@@ -32,13 +31,24 @@ const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
         onClick={() => setOpen((prev) => !prev)}
       />
 
-      {/* 下拉選單 */}
       {open && (
         <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-xl z-50 py-2 border">
           <div className="px-4 py-2 border-b">
             <p className="font-medium text-sm text-gray-800">UserName</p>
             <p className="text-xs text-gray-500">UserEmail@gmail.com</p>
           </div>
+
+          {/* ✅ 新增個人檔案按鈕 */}
+          <button
+            onClick={() => {
+              navigate("/profile");
+              setOpen(false); // 點擊後關閉選單
+            }}
+            className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            <img src={profileIcon} alt="Profile" className="w-4 h-4 mr-2" />
+            個人檔案
+          </button>
 
           <button
             onClick={() => navigate("/purchase-request-list")}
