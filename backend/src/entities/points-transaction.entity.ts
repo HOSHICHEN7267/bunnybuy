@@ -1,3 +1,4 @@
+// bunnybuy\backend\src\entities\points-transaction.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('points_transactions')
