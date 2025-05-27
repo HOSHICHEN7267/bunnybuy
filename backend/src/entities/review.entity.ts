@@ -1,3 +1,4 @@
+// bunnybuy\backend\src\entities\review.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('reviews')
