@@ -14,6 +14,8 @@ import { PurchaseAssignment } from './entities/purchase-assignment.entity';
 import { Review } from './entities/review.entity';
 
 import { UserModule } from './user/user.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { ProductModule } from './product/product.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -47,7 +49,10 @@ import { AuthModule } from './auth/auth.module';
       }),
     }),
 
+
+    CloudinaryModule,
     UserModule,
+    ProductModule,
     AuthModule,
   ],
   controllers: [AppController],

@@ -24,8 +24,13 @@ services:
       DB_DATABASE: bunnybuydb
     ports:
       - '3000:3000'
+    volumes:
+      - ./backend:/app  # ✅ 加這行
+    env_file:
+      - ./backend/.env
     depends_on:
       - mysql
+
 
   frontend:
     build:
