@@ -131,7 +131,7 @@ const OrderListView = () => {
                         <tr key={index} className="border-t">
                           <td className="py-2">{product.name}</td>
                           <td>{item.quantity}</td>
-                          <td>${product.price}</td>
+                          <td>${product.discount}</td>
                         </tr>
                       );
                     })}

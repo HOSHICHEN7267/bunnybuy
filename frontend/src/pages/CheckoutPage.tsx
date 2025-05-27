@@ -4,6 +4,9 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import arrow_right_icon_colored from "../assets/arrow_right_icon_colored.svg";
 import { CartItem } from "../interfaces";
+import { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
+import { MyOrder } from "../interfaces";
 
 const Checkout = () => {
   const location = useLocation();
@@ -14,11 +17,15 @@ const Checkout = () => {
   const shippingFee = carttotalPrice >= 1000 ? 0 : 60;
   const total = carttotalPrice + shippingFee;
 
+  const { user } = useAuth();
+  console.log("🚀 user:", user);
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
     address: "",
     payment: "cod",
+    delivery_method: "面交",
   });
 
   const handleChange = (
@@ -27,11 +34,34 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("訂單已送出！");
-    navigate("/");
+
+    try {
+      const payload: Omit<MyOrder, "request_id" | "created_at"> = {
+        buyer_id: user?.user_id || "aaa", // 從登入資訊抓，或你要用 localStorage 暫存
+        payment: form.payment,
+        delivery_method: form.delivery_method,
+        delivery_address: form.address,
+        total_price: total,
+        products: cartItems.map((item) => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          status: "待處理",
+        })),
+      };
+
+      await axios.post("http://localhost:3000/purchase-requests", payload);
+
+      alert("✅ 訂單已送出！");
+      localStorage.removeItem("cartItems");
+      navigate("/");
+    } catch (err) {
+      console.error("❌ 訂單送出失敗", err);
+      alert("訂單送出失敗，請稍後再試。");
+    }
   };
+
 
   return (
     <>
@@ -131,6 +161,22 @@ const Checkout = () => {
                   <option value="mobilepay">行動支付</option>
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  交貨方式
+                </label>
+                <select
+                  name="delivery_method"
+                  value={form.delivery_method}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2"
+                >
+  
+                  <option value="面交">面交</option>
+                  <option value="店到店">店到店</option>
+                </select>
+              </div>
+
             </form>
 
             {/* 🔹 訂單摘要區塊 */}
