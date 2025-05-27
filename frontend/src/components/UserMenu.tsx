@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import cartIcon from "../assets/cart_icon.svg";
 import logoutIcon from "../assets/logout.png";
 import avatarImg from "../assets/user_icon.svg";
+import bunwo from "../assets/bunwo.png";
+import bunny from "../assets/bunny.png";
 
 const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
   const [open, setOpen] = useState(false);
@@ -37,6 +39,22 @@ const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
             <p className="font-medium text-sm text-gray-800">UserName</p>
             <p className="text-xs text-gray-500">UserEmail@gmail.com</p>
           </div>
+
+          <button
+            onClick={() => navigate("/purchase-request-list")}
+            className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            <img src={bunwo} alt="Cart" className="w-4 h-4 mr-2" />
+            幫我買訂單
+          </button>
+
+          <button
+            onClick={() => navigate("/purchase-assign-list")}
+            className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            <img src={bunny} alt="Cart" className="w-4 h-4 mr-2" />
+            幫你買訂單
+          </button>
 
           <button
             onClick={() => navigate("/cart")}
