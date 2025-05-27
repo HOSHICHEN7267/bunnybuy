@@ -8,6 +8,9 @@ import { useEffect} from "react";
 import axios from "axios";
 import { MyOrder, Product } from "../interfaces";
 
+import { useAuth } from "../contexts/AuthContext";
+import { YourOrder } from "../interfaces"; 
+
 
 const OrderListView = () => {
   const navigate = useNavigate();
@@ -21,8 +24,57 @@ const OrderListView = () => {
   //   );
   // };
 
-  const handleAcceptOrder = (orderId: string) => {
-    alert(`你已接單：${orderId}`);
+  const { user } = useAuth(); // 確保有登入資訊
+
+  const handleAcceptOrder = async (orderId: string) => {
+    const order = myorders.find((o) => o.request_id === orderId);
+    if (!order) return;
+
+    const agent_id = user?.user_id ?? "mock-agent";
+    const today = new Date().toISOString().split("T")[0];
+
+    const assignments = order.products.map((item) => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+      request_id: orderId,
+      agent_id,
+      status: "已接受",
+      delivery_date: today,
+    }));
+    
+    const data = order.products.map((item) => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+      status:"進行中",
+    }));
+    console.log("data", data);
+
+    try {
+      // 1. 新增 purchase_assignments
+      await Promise.all(
+        assignments.map((a) =>
+          axios.post("http://localhost:3000/purchase-assignments", a)
+        )
+      );
+
+      
+      // 2. 更新 purchase_request 狀態為「進行中」
+      await axios.patch(
+        `http://localhost:3000/purchase-requests/${orderId}`,
+        { products: data },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      alert(`✅ 已成功接單，狀態更新為進行中`);
+      
+      // 你也可以在這更新前端狀態，避免重複點擊
+    } catch (err) {
+      console.error("❌ 接單或狀態更新失敗", err);
+      alert("接單失敗，請稍後再試！");
+    }
   };
 
   const [expandedOrderIds, setExpandedOrders] = useState<Set<string>>(new Set());
@@ -68,6 +120,10 @@ const OrderListView = () => {
         <div className="space-y-4">
           {myorders.map((order) => {
             const isExpanded = expandedOrderIds.has(order.request_id);
+            const needProcessed = order.products.some(item => item.status === "待處理");
+            if (!needProcessed) {
+              return null; // 跳過已處理的訂單
+            }
             return (
               <div
                 key={order.request_id}
@@ -110,6 +166,7 @@ const OrderListView = () => {
                         <th className="py-2">商品名稱</th>
                         <th>數量</th>
                         <th>價格</th>
+                        <th>狀態</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -123,6 +180,7 @@ const OrderListView = () => {
                             <td className="py-2 text-red-500">產品不存在</td>
                             <td>{item.quantity}</td>
                             <td>$0</td>
+                            <td>-</td>
                           </tr>
                         );
                       }
@@ -132,6 +190,7 @@ const OrderListView = () => {
                           <td className="py-2">{product.name}</td>
                           <td>{item.quantity}</td>
                           <td>${product.discount}</td>
+                          <td>{item.status}</td>
                         </tr>
                       );
                     })}
@@ -156,88 +215,7 @@ const OrderListView = () => {
       <Footer />
     </>
   );
-//     const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
 
-//   const toggleOrder = (orderId: string) => {
-//     setExpandedOrders(prev => {
-//       const newSet = new Set(prev);
-//       newSet.has(orderId) ? newSet.delete(orderId) : newSet.add(orderId);
-//       return newSet;
-//     });
-//   };
-
-//   const handleAcceptOrder = (orderId: string) => {
-//     alert(`你已接單：${orderId}`);
-//     // 可加上 API 請求邏輯
-//   };
-
-//   return (
-//     <div className="p-4 max-w-4xl mx-auto">
-//       <h1 className="text-2xl font-bold mb-4">訂單總覽</h1>
-//       {orders.map(order => (
-//         <div
-//           key={order.orderId}
-//           className="border rounded-lg shadow-md mb-4 overflow-hidden"
-//         >
-//           <div
-//             onClick={() => toggleOrder(order.orderId)}
-//             className="cursor-pointer flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200"
-//           >
-//             <div>
-//               <p className="font-semibold">訂單編號: {order.orderId}</p>
-//               <p>客戶: {order.customerName}</p>
-//               <p>狀態: {order.status}</p>
-//               <p>總金額: ${order.total}</p>
-//             </div>
-//             <button
-//               onClick={e => {
-//                 e.stopPropagation();
-//                 handleAcceptOrder(order.orderId);
-//               }}
-//               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-//             >
-//               接單
-//             </button>
-//           </div>
-//           {expandedOrders.has(order.orderId) && (
-//             <div className="bg-white p-4 border-t">
-//               <h2 className="text-lg font-semibold mb-2">商品明細</h2>
-//               {order.items.map(item => (
-//                 <div
-//                   key={item.product_id}
-//                   className="mb-4 p-2 border rounded shadow-sm"
-//                 >
-//                   <div className="flex gap-4">
-//                     <img
-//                       src={item.image[0]}
-//                       alt={item.name}
-//                       className="w-20 h-20 object-cover rounded"
-//                     />
-//                     <div>
-//                       <p className="font-bold">{item.name}</p>
-//                       <p>{item.description}</p>
-//                       <p>價格: ${item.price}</p>
-//                       <p>折扣後: ${item.discount}</p>
-//                       <p>商家庫存:</p>
-//                       <ul className="ml-4 list-disc">
-//                         {item.stock_list.map((stock, index) => (
-//                           <li key={index}>
-//                             {stock.store_name}：{stock.stock} 件（供應商ID:{" "}
-//                             {stock.provider_id}）
-//                           </li>
-//                         ))}
-//                       </ul>
-//                     </div>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
 };
 
 export default OrderListView;

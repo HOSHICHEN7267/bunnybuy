@@ -49,3 +49,13 @@ export interface MyOrder {
   delivery_address: string;
 
 };
+
+export interface YourOrder {
+  assignment_id: string;
+  product_id: string;
+  quantity: number;
+  request_id: string;
+  agent_id: string;
+  status: string;
+  delivery_date: string;
+};
