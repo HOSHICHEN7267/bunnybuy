@@ -11,7 +11,7 @@ export interface Product {
   }[];
   status: string;
   created_at: string;
-  image: string[];
+  image_list: string[];
 }
 
 export interface CartItem {
@@ -20,7 +20,7 @@ export interface CartItem {
   price: number;
   discount: number;
   quantity: number;
-  image: string[];
+  image_list: string[];
 }
 
 export interface Order {
@@ -32,4 +32,20 @@ export interface Order {
     product: Product;
     count: number;
   }[];
+};
+
+export interface MyOrder {
+  request_id: string;
+  buyer_id: string;
+  products: {
+    product_id: string;
+    quantity: number;
+    status: string;
+  }[];
+  total_price: number;
+  payment: string;
+  created_at: string;
+  delivery_method: string;
+  delivery_address: string;
+
 };

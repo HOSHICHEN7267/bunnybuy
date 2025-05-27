@@ -51,7 +51,7 @@ const Checkout = () => {
                   className="flex items-center gap-4 border-b pb-3"
                 >
                   <img
-                    src={item.image[0]}
+                    src={item.image_list[0]}
                     alt={item.name}
                     className="w-16 h-16 object-contain rounded"
                   />

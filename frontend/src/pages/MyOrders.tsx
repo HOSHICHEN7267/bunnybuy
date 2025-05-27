@@ -4,10 +4,13 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import box_icon from "../assets/box_icon.svg";
 
+import { useEffect} from "react";
+import axios from "axios";
+import { MyOrder, Product } from "../interfaces";
+
 const MyOrders = () => {
     const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
     const navigate = useNavigate();
-
     const toggleExpand = (requestId: string) => {
         setExpandedOrders((prev) => {
             const updated = new Set(prev);
@@ -20,32 +23,32 @@ const MyOrders = () => {
         });
     };
 
-    const myorders = [
-        {
-            request_id: "order-1",
-            buyer_id: "user-1",
-            products: [
-                { product_id: "product-1", name: "Bulbasaur", quantity: 2, price: 100, discount: 99, image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"] },
-                { product_id: "product-2", name: "Charmander", quantity: 1, price: 200, discount: 199, image: ["/products/Charmander.png", "/products/Charmeleon.png", "/products/Charizard.png"] },
-            ],
-            total_price: 100,
-            payment: "COD",
-            created_at: "2023-10-01",
-            status: "pending",
-        },
-        {
-            request_id: "order-2",
-            buyer_id: "user-1",
-            products: [
-                { product_id: "product-1", name: "Bulbasaur", quantity: 2, price: 100, discount: 99, image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"] },
-                { product_id: "product-3", name: "Squirtle", quantity: 5, price: 300, discount: 299, image: ["/products/Squirtle.png", "/products/Blastoise.png"] },
-            ],
-            total_price: 500,
-            payment: "COD",
-            created_at: "2025-05-27",
-            status: "pending",
-        },
-    ];
+    const [myorders, setMyOrders] = useState<MyOrder[]>([]);
+    const [productsMap, setProductsMap] = useState<Map<string, Product>>(new Map());
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [ordersRes, productsRes] = await Promise.all([
+                    axios.get("http://localhost:3000/purchase-requests"),
+                    axios.get("http://localhost:3000/products"),
+                ]);
+                console.log("Fetched orders:", ordersRes.data);
+                console.log("Fetched products:", productsRes.data);
+
+                setMyOrders(ordersRes.data);
+
+                setProductsMap(new Map<string, Product>(
+                  (productsRes.data as Product[]).map(p => [p.product_id, p])
+                ));
+            } 
+            catch (error) {
+                console.error("Fetching error:", error);
+            }
+        };
+
+    fetchData();
+    }, []);
 
     return (
         <>
@@ -54,7 +57,7 @@ const MyOrders = () => {
                 <div className="space-y-5">
                     <h2 className="text-lg font-semibold mt-6 text-left">My Orders</h2>
                     <div className="max-w-5xl border-t border-gray-300 text-sm">
-                        {myorders.map((order) => (
+                        {myorders.map((order: MyOrder) => (
                             <div key={order.request_id} className="border-b border-gray-300">
                                 {/* 訂單 summary row */}
                                 <button
@@ -69,9 +72,13 @@ const MyOrders = () => {
                                         />
                                         <p className="flex flex-col gap-3">
                                             <span className="font-medium text-base">
-                                                {order.products
-                                                    .map((item) => `${item.name} x ${item.quantity}`)
-                                                    .join(", ")}
+                                                {order.products.map((item) => {
+                                                    const product = productsMap.get(item.product_id);
+                                                    const name = product?.name || "Unknown";
+                                                    return `${name} x ${item.quantity}`;
+                                                })
+                                                .join(", ")
+                                                }
                                             </span>
                                             <span className="text-left">Items : {order.products.length}</span>
                                         </p>
@@ -79,9 +86,9 @@ const MyOrders = () => {
                                     <p className="font-medium my-auto">${order.total_price}</p>
                                     <div>
                                         <p className="flex flex-col text-left">
-                                            <span>Method : {order.payment}</span>
+                                            <span>Payment : {order.payment}</span>
                                             <span>Date : {order.created_at}</span>
-                                            <span>Status : {order.status}</span>
+                                            <span>Delivery : {order.delivery_method}</span>
                                         </p>
                                     </div>
                                 </button>
@@ -99,34 +106,38 @@ const MyOrders = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {order.products.map((product) => (
-                                                    <tr key={product.product_id} className="border-b hover:bg-gray-50 transition">
+                                            {order.products.map((item) => {
+                                                const product = productsMap.get(item.product_id); // 這裡查出完整 Product
+
+                                                return (
+                                                    <tr key={item.product_id} className="border-b hover:bg-gray-50 transition">
                                                         <td
                                                             className="py-3 flex items-center gap-3 cursor-pointer"
                                                             onClick={() => {
-                                                                navigate(`/product-detail/${product.product_id}`);
+                                                                navigate(`/product-detail/${item.product_id}`);
                                                                 scrollTo(0, 0);
                                                             }}
                                                         >
                                                             <img
-                                                                src={product.image[0]}
-                                                                alt={product.name}
+                                                                src={product?.image_list[0]}
+                                                                alt={product?.name}
                                                                 className="w-10 h-10 rounded object-cover border"
                                                             />
-                                                            <span>{product.name}</span>
+                                                            <span>{product?.name || "Unknown Product"}</span>
                                                         </td>
-                                                        <td className="text-center">{product.quantity}</td>
+                                                        <td className="text-center">{item.quantity}</td>
                                                         <td>
-                                                            ${product.discount}
+                                                            ${product?.discount ?? 0}
                                                             <span className="text-sm font-normal text-gray-800/60 line-through ml-3">
-                                                                ${product.price}
+                                                                ${product?.price ?? 0}
                                                             </span>
                                                         </td>
                                                         <td className="text-green-600 font-medium">
-                                                            ${product.discount * product.quantity}
+                                                            ${(product?.discount ?? 0) * item.quantity}
                                                         </td>
                                                     </tr>
-                                                ))}
+                                                );
+                                            })}
                                             </tbody>
                                         </table>
                                     </div>

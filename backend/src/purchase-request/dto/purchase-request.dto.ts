@@ -1,19 +1,25 @@
-// src/dto/create-purchase-request.dto.ts
+export class CreatePurchaseRequestItemDto {
+  product_id: string;
+  quantity: number;
+  status?: string;
+}
+
 export class CreatePurchaseRequestDto {
   buyer_id: string;
-  product: {
-    product_id: string;
-    quantity: number;
-    status: string;
-  };
+  products: CreatePurchaseRequestItemDto[];
   total_price: number;
+  payment: string;
+  delivery_method: string;
+  delivery_address: string;
+  status?: string;
 }
-// src/dto/update-purchase-request.dto.ts
+
 export class UpdatePurchaseRequestDto {
-  product?: {
-    product_id?: string;
-    quantity?: number;
-    status?: string;
-  };
+  buyer_id?: string;
+  products?: CreatePurchaseRequestItemDto[];
   total_price?: number;
+  payment?: string;
+  delivery_method?: string;
+  delivery_address?: string;
+  status?: string;
 }

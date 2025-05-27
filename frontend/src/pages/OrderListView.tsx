@@ -4,89 +4,61 @@ import Footer from "../components/Footer";
 
 import { useNavigate } from "react-router-dom";
 
+import { useEffect} from "react";
+import axios from "axios";
+import { MyOrder, Product } from "../interfaces";
 
-
-{/*  import { Order } from "../interfaces"; */}
-
-
-// type OrderItem = {
-//   productName: string;
-//   quantity: number;
-//   price: number;
-// };
-
-// type Order = {
-//   orderId: string;
-//   customerName: string;
-//   status: string;
-//   total: number;
-//   items: Product[];
-// };
-
-// const mockOrders: Order[] = [
-//   {
-//     orderId: "A001",
-//     customerName: "Alice",
-//     status: "待處理",
-//     total: 499,
-//     items: [
-//       { productName: "Charmander", quantity: 1, price: 199 },
-//       { productName: "Squirtle", quantity: 1, price: 300 },
-//     ],
-//   },
-//   {
-//     orderId: "B002",
-//     customerName: "Bob",
-//     status: "已完成",
-//     total: 199,
-//     items: [
-//       { productName: "Bulbasaur", quantity: 2, price: 99 },
-//     ],
-//   },
-// ];
-
-const myorders = [
-    {
-        request_id: "order-1",
-        buyer_id: "user-1",
-        products: [
-            { product_id: "product-1", name: "Bulbasaur", quantity: 2, price: 100, discount: 99, image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"] },
-            { product_id: "product-2", name: "Charmander", quantity: 1, price: 200, discount: 199, image: ["/products/Charmander.png", "/products/Charmeleon.png", "/products/Charizard.png"] },
-        ],
-        total_price: 100,
-        payment: "貨到付款",
-        created_at: "2023-10-01",
-        status: "待處理",
-    },
-    {
-        request_id: "order-2",
-        buyer_id: "user-1",
-        products: [
-            { product_id: "product-1", name: "Bulbasaur", quantity: 2, price: 100, discount: 99, image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"] },
-            { product_id: "product-3", name: "Squirtle", quantity: 5, price: 300, discount: 299, image: ["/products/Squirtle.png", "/products/Blastoise.png"] },
-        ],
-        total_price: 500,
-        payment: "貨到付款",
-        created_at: "2025-05-27",
-        status: "待處理",
-    },
-];
 
 const OrderListView = () => {
   const navigate = useNavigate();
-  const [expandedOrderIds, setExpandedOrderIds] = useState<string[]>([]);
+  // const [expandedOrderIds, setExpandedOrderIds] = useState<string[]>([]);
 
-  const toggleExpand = (orderId: string) => {
-    setExpandedOrderIds((prev) =>
-      prev.includes(orderId)
-        ? prev.filter((id) => id !== orderId)
-        : [...prev, orderId]
-    );
-  };
+  // const toggleExpand = (orderId: string) => {
+  //   setExpandedOrderIds((prev) =>
+  //     prev.includes(orderId)
+  //       ? prev.filter((id) => id !== orderId)
+  //       : [...prev, orderId]
+  //   );
+  // };
 
   const handleAcceptOrder = (orderId: string) => {
     alert(`你已接單：${orderId}`);
   };
+
+  const [expandedOrderIds, setExpandedOrders] = useState<Set<string>>(new Set());
+  const toggleExpand = (requestId: string) => {
+      setExpandedOrders((prev) => {
+          const updated = new Set(prev);
+          if (updated.has(requestId)) {
+              updated.delete(requestId);
+          } else {
+              updated.add(requestId);
+          }
+          return updated;
+      });
+  };
+  const [myorders, setMyOrders] = useState<MyOrder[]>([]);
+  const [productsMap, setProductsMap] = useState<Map<string, Product>>(new Map());
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const [ordersRes, productsRes] = await Promise.all([
+                  axios.get("http://localhost:3000/purchase-requests"),
+                  axios.get("http://localhost:3000/products"),
+              ]);
+              console.log("Fetched orders:", ordersRes.data);
+              console.log("Fetched products:", productsRes.data);
+              setMyOrders(ordersRes.data);
+              setProductsMap(new Map<string, Product>(
+                (productsRes.data as Product[]).map(p => [p.product_id, p])
+              ));
+          } 
+          catch (error) {
+              console.error("Fetching error:", error);
+          }
+      };
+  fetchData();
+  }, []);
 
   return (
     <>
@@ -95,7 +67,7 @@ const OrderListView = () => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">訂單總覽</h1>
         <div className="space-y-4">
           {myorders.map((order) => {
-            const isExpanded = expandedOrderIds.includes(order.request_id);
+            const isExpanded = expandedOrderIds.has(order.request_id);
             return (
               <div
                 key={order.request_id}
@@ -110,7 +82,7 @@ const OrderListView = () => {
                       訂單編號：{order.request_id}
                     </p>
                     <p className="text-sm text-gray-500">
-                      客戶：{order.buyer_id} ｜ 狀態：{order.status}
+                      客戶：{order.buyer_id} ｜ 付款方式：{order.payment}
                     </p>
                   </div>
                   <div className="text-right text-lg text-gray-600">
@@ -141,13 +113,28 @@ const OrderListView = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {order.products.map((item, index) => (
+                    {order.products.map((item, index) => {
+                      const product = productsMap.get(item.product_id);
+
+                      if (!product) {
+                        // 找不到產品時，可以跳過或顯示預設內容
+                        return (
+                          <tr key={index} className="border-t">
+                            <td className="py-2 text-red-500">產品不存在</td>
+                            <td>{item.quantity}</td>
+                            <td>$0</td>
+                          </tr>
+                        );
+                      }
+
+                      return (
                         <tr key={index} className="border-t">
-                          <td className="py-2">{item.name}</td>
+                          <td className="py-2">{product.name}</td>
                           <td>{item.quantity}</td>
-                          <td>${item.price}</td>
+                          <td>${product.price}</td>
                         </tr>
-                      ))}
+                      );
+                    })}
                     </tbody>
                   </table>
                   <button

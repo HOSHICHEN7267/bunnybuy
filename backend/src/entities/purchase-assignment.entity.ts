@@ -21,12 +21,6 @@ export class PurchaseAssignment {
   @Column()
   status: string;
 
-  @Column()
-  delivery_method: string;
-
-  @Column('text')
-  delivery_address: string;
-
   @Column('date')
   delivery_date: Date;
 }

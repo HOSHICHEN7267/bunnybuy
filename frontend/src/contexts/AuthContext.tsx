@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(storedToken);
         setUser(parsedUser);
       } catch (err) {
+
         console.error('❌ 解析 localStorage user 錯誤:', err);
         localStorage.removeItem('user'); // 清除壞掉的 user 資料
       }
