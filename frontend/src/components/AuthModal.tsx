@@ -37,7 +37,11 @@ const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
         alert("註冊成功，請登入！");
         setMode("login");
       } catch (err: any) {
-        setError(err.message);
+        if (err.message.includes('已存在') || err.message.includes('Duplicate')) {
+          setError("❌ 使用者名稱或 Email 已被註冊");
+        } else {
+          setError(err.message);
+        }
       }
     }
 
@@ -52,13 +56,15 @@ const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "登入失敗");
 
-        const { token, user } = data;
-        onLogin(token, user);
+        const { access_token, user } = data;
+        onLogin(access_token, user); // ✅ 直接存入 context
         onClose();
       } catch (err: any) {
         setError(err.message);
       }
     }
+
+
   };
 
   return (
