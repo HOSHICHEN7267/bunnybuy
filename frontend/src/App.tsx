@@ -8,6 +8,8 @@ import OrderListView from './pages/OrderListView';
 import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
 import Checkout from './pages/CheckoutPage';
+import MyOrders from './pages/MyOrders';
+import Contact from './pages/Contact';
 
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './routes/PrivateRoute';
@@ -22,7 +24,9 @@ function App() {
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-
+        <Route path="/purchase-request-list" element={<MyOrders />} />
+        <Route path="/contact" element={<Contact />} />
+        
         {/* ✅ 受保護的頁面 */}
         <Route
           path="/profile"
@@ -32,6 +36,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        
       </Routes>
     </AuthProvider>
   );
