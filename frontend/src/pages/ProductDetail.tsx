@@ -9,71 +9,27 @@ import { Product, CartItem } from "../interfaces";
 import star_icon from '../assets/star_icon.svg';
 import star_dull_icon from '../assets/star_dull_icon.svg';
 
-const ProductDetail = () => {
+import { useEffect } from "react";
+import axios from "axios";
 
-    const products = [
-        {
-        product_id: "product-1",
-        name: "Bulbasaur",
-        description: "Description for Bulbasaur",
-        price: 100,
-        discount: 99,
-        stock_list: [
-            {"store_name": "商家A", "stock": 100, "provider_id": "user-1"},
-            {"store_name": "商家B", "stock": 50, "provider_id": "user-2"},
-        ],
-        status: "available",
-        created_at: "",
-        image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"],
-        },
-        {
-        product_id: "product-2",
-        name: "Charmander",
-        description: "Description for Charmander",
-        price: 200,
-        discount: 199,
-        stock_list: [
-            {"store_name": "商家C", "stock": 100, "provider_id": "user-2"},
-            {"store_name": "商家D", "stock": 50, "provider_id": "user-2"},
-        ],
-        status: "available",
-        created_at: "",
-        image: ["/products/Charmander.png", "/products/Charmeleon.png", "/products/Charizard.png"],
-        },
-        {
-        product_id: "product-3",
-        name: "Squirtle",
-        description: "Description for Squirtle",
-        price: 300,
-        discount: 299,
-        stock_list: [
-            {"store_name": "商家E", "stock": 100, "provider_id": "user-1"},
-            {"store_name": "商家F", "stock": 50, "provider_id": "user-1"},
-        ],
-        status: "available",
-        created_at: "",
-        image: ["/products/Squirtle.png", "/products/Blastoise.png"],
-        },
-        {
-        product_id: "product-4",
-        name: "Mew",
-        description: "Description for Mew",
-        price: 500,
-        discount: 499,
-        stock_list: [
-            {"store_name": "商家G", "stock": 100, "provider_id": "user-3"},
-            {"store_name": "商家H", "stock": 50, "provider_id": "user-4"},
-        ],
-        status: "available",
-        created_at: "",
-        image: ["/products/Mew.png", "/products/Mewtwo.png"],
-        },
-        // Add more products as needed
-    ]
+const ProductDetail = () => {
+      
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:3000/products") // ⬅️ 請確認這裡是你的後端 base URL
+        .then((response) => {
+            setProducts(response.data);
+            console.log("Fetched products:", response.data);
+        })
+        .catch((error) => {
+            console.error("Failed to fetch products:", error);
+        });
+    }, []);
 
     const { productId } = useParams();
 
-    const product = products.find((p) => p.product_id === productId);
+    const product = products.find((p:Product) => p.product_id === productId);
     const navigate = useNavigate();
     const [showStockList, setShowStockList] = useState(false);
     const [mainImage, setMainImage] = useState("");
@@ -110,7 +66,7 @@ const ProductDetail = () => {
                 <div className="px-5 lg:px-16 xl:px-20">
                     <div className="rounded-lg overflow-hidden bg-gray-500/10 mb-4">
                         <img
-                            src={mainImage || product.image[0]}
+                            src={mainImage || product.image_list[0]}
                             alt="alt"
                             className="w-full h-auto object-cover mix-blend-multiply"
                             width={1280}
@@ -119,7 +75,7 @@ const ProductDetail = () => {
                     </div>
 
                     <div className="grid grid-cols-4 gap-4">
-                        {product.image.map((image, index) => (
+                        {product.image_list.map((image, index) => (
                             <div
                                 key={index}
                                 onClick={() => setMainImage(image)}
