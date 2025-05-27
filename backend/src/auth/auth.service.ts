@@ -27,13 +27,27 @@ export class AuthService {
       throw new UnauthorizedException('帳號或密碼錯誤');
     }
 
-    const payload = { sub: user.user_id, username: user.username, role: user.role };
-    // return { access_token: this.jwtService.sign(payload) };
+    const payload = {
+      sub: user.user_id,
+      username: user.username,
+      role: user.role,
+    };
 
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-    return { access_token: accessToken,refresh_token: refreshToken, };
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      user: {
+        user_id: user.user_id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+      },
+    };
   }
+
 
   async refresh(refreshToken: string) {
     try {

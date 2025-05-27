@@ -6,6 +6,7 @@ interface User {
   email: string;
   username: string;
   role?: string;
+  points?: number; // ✅ 新增這行
 }
 
 interface AuthContextType {
@@ -24,13 +25,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
+
     if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setToken(storedToken);
+        setUser(parsedUser);
+      } catch (err) {
+        console.error('❌ 解析 localStorage user 錯誤:', err);
+        localStorage.removeItem('user'); // 清除壞掉的 user 資料
+      }
     }
   }, []);
 
   const login = (jwt: string, user: User) => {
+    if (!jwt || !user) {
+      console.warn('⚠️ login 被呼叫但 jwt 或 user 無效:', jwt, user);
+      return;
+    }
+
     setToken(jwt);
     setUser(user);
     localStorage.setItem('token', jwt);
