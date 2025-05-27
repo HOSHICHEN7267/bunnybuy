@@ -21,7 +21,7 @@ interface Order {
     status: string,
 }
 
-<!-- import { Order } from "../interfaces"; -->
+{/*  import { Order } from "../interfaces"; */}
 
 
 // type OrderItem = {
@@ -89,82 +89,6 @@ const myorders = [
 
 const OrderListView = () => {
   const navigate = useNavigate();
-
-
-// const OrderListView = () => {
-
-//     const orders: Order[] = [
-//         {
-//         orderId: "A001",
-//         customerName: "Alice",
-//         status: "待處理",
-//         total: 499,
-//         items: [
-//             {
-//             product:{
-//                 product_id: "product-1",
-//                 name: "Bulbasaur",
-//                 description: "Description for Bulbasaur",
-//                 price: 100,
-//                 discount: 99,
-//                 stock_list: [
-//                     {"store_name": "商家A", "stock": 100, "provider_id": "user-1"},
-//                     {"store_name": "商家B", "stock": 50, "provider_id": "user-2"},
-//                 ],
-//                 status: "available",
-//                 created_at: "",
-//                 image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"],
-//                 },
-//             count: 1,
-//             },
-//             {
-//             product:{
-//                 product_id: "product-2",
-//                 name: "Charmander",
-//                 description: "Description for Charmander",
-//                 price: 200,
-//                 discount: 199,
-//                 stock_list: [
-//                     {"store_name": "商家C", "stock": 100, "provider_id": "user-2"},
-//                     {"store_name": "商家D", "stock": 50, "provider_id": "user-2"},
-//                 ],
-//                 status: "available",
-//                 created_at: "",
-//                 image: ["/products/Charmander.png", "/products/Charmeleon.png", "/products/Charizard.png"],
-//                 },
-//             count: 2,
-//             }
-//         ]
-//         },
-//         {
-//         orderId: "B002",
-//         customerName: "Bob",
-//         status: "已完成",
-//         total: 199,
-//         items: [
-//             {
-//             product:{
-//                 product_id: "product-1",
-//                 name: "Bulbasaur",
-//                 description: "Description for Bulbasaur",
-//                 price: 100,
-//                 discount: 99,
-//                 stock_list: [
-//                     {"store_name": "商家A", "stock": 100, "provider_id": "user-1"},
-//                     {"store_name": "商家B", "stock": 50, "provider_id": "user-2"},
-//                 ],
-//                 status: "available",
-//                 created_at: "",
-//                 image: ["/products/Bulbasaur.png", "/products/Ivysaur.png"],
-//                 },
-//             count: 15,
-//             }
-//         ]
-//         }
-//     ]
-
-//   const { order } = useParams();
-
   const [expandedOrderIds, setExpandedOrderIds] = useState<string[]>([]);
 
   const toggleExpand = (orderId: string) => {
@@ -177,7 +101,6 @@ const OrderListView = () => {
 
   const handleAcceptOrder = (orderId: string) => {
     alert(`你已接單：${orderId}`);
-    // 可加上 API 請求邏輯
   };
 
   return (
@@ -186,13 +109,8 @@ const OrderListView = () => {
       <div className="min-h-screen bg-gray-50 px-6 md:px-16 lg:px-32 pt-12 pb-20">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">訂單總覽</h1>
         <div className="space-y-4">
-
           {myorders.map((order) => {
             const isExpanded = expandedOrderIds.includes(order.request_id);
-
-//           {orders.map((order) => {
-//             const isExpanded = expandedOrderIds.includes(order.orderId);
-
             return (
               <div
                 key={order.request_id}
@@ -214,66 +132,50 @@ const OrderListView = () => {
                     總金額：${order.total_price}
                   </div>
                   <button
-                    onClick={e => {
-                        e.stopPropagation();
-                        handleAcceptOrder(order.orderId);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAcceptOrder(order.request_id);
                     }}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ml-4"
+                  >
                     接單
-                    </button>
+                  </button>
                 </button>
 
-                {<div
-                className={`px-4 overflow-hidden transition-all duration-300 ease-in-out ${
+                <div
+                  className={`px-4 overflow-hidden transition-all duration-300 ease-in-out ${
                     isExpanded ? "max-h-96 pb-4" : "max-h-0"
-                }`}
+                  }`}
                 >
-                <table className="w-full mt-2 border-t pt-2 text-sm text-gray-700">
+                  <table className="w-full mt-2 border-t pt-2 text-sm text-gray-700">
                     <thead>
-                    <tr className="text-left text-gray-600">
-                        <th>商品編號</th>
+                      <tr className="text-left text-gray-600">
                         <th className="py-2">商品名稱</th>
-                        <th>描述</th>
-                        <th>價格</th>
-                        <th>折扣</th>
                         <th>數量</th>
-                    </tr>
+                        <th>價格</th>
+                      </tr>
                     </thead>
                     <tbody>
-                    {order.products.map((item, index) => (
+                      {order.products.map((item, index) => (
                         <tr key={index} className="border-t">
-
-                        <td className="py-2">{item.name}</td>
-                        <td>{item.quantity}</td>
-                        <td>${item.price}</td>
-
-                   <!-- <td>{item.product.product_id}</td>
-                        <td className="py-2">{item.product.name}</td>
-                        <td>{item.product.description}</td>
-                        <td>{item.product.price}</td>
-                        <td>{item.product.discount}</td>
-                        <td>{item.count}</td> -->
-
+                          <td className="py-2">{item.name}</td>
+                          <td>{item.quantity}</td>
+                          <td>${item.price}</td>
                         </tr>
-                    ))}
+                      ))}
                     </tbody>
-                </table>
-                <button
-                  onClick={() => {
-                    const ordersWithExtraData = myorders.map((order) => ({
-                      ...order,
-                    }));
-
-                    navigate("/order-confirmation", {
-                      state: { orders: ordersWithExtraData }, // ✅ 重點：是多筆
-                    });
-                  }}
-                  className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
-                >
-                  🛒 確認接單
-                </button>
-                </div>}
+                  </table>
+                  <button
+                    onClick={() => {
+                      navigate("/order-confirmation", {
+                        state: { orders: myorders },
+                      });
+                    }}
+                    className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
+                  >
+                    🛒 確認接單
+                  </button>
+                </div>
               </div>
             );
           })}
