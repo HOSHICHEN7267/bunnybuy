@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import cartIcon from "../assets/cart_icon.svg";
 import logoutIcon from "../assets/logout.png";
 import avatarImg from "../assets/user_icon.svg";
+import bunwo from "../assets/bunwo.png";
+import bunny from "../assets/bunny.png";
 import profileIcon from "../assets/profile_icon.jpg"; // ✅ 建議你新增一個個人頁面的 icon
 
 const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
@@ -46,6 +48,22 @@ const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
           >
             <img src={profileIcon} alt="Profile" className="w-4 h-4 mr-2" />
             個人檔案
+          </button>
+
+          <button
+            onClick={() => navigate("/purchase-request-list")}
+            className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            <img src={bunwo} alt="Cart" className="w-4 h-4 mr-2" />
+            幫我買訂單
+          </button>
+
+          <button
+            onClick={() => navigate("/purchase-assign-list")}
+            className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            <img src={bunny} alt="Cart" className="w-4 h-4 mr-2" />
+            幫你買訂單
           </button>
 
           <button

@@ -1,39 +1,18 @@
-"use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from 'react-router-dom';
 import AuthModal from "./AuthModal";
 import logo from '../assets/logo.png';
-
 import UserMenu from "./UserMenu";
 
+import { useAuth } from "../contexts/AuthContext"; // ✅ 匯入 context
+
 const Navbar = () => {
-  
   const [showModal, setShowModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("isLoggedIn");
-    if (stored === "true") {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true); 
-    localStorage.setItem("isLoggedIn", "true");
-    setShowModal(false);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("isLoggedIn");
-  };
+  const { user, login, logout } = useAuth(); // ✅ 使用 context
 
   return (
     <>
-      {/* Navbar */}
       <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-4 border-b border-gray-200 text-gray-800 bg-white shadow-sm z-50">
-        {/* Logo */}
         <Link to="/">
           <img
             src={logo}
@@ -42,7 +21,6 @@ const Navbar = () => {
           />
         </Link>
 
-        {/* Menu */}
         <div className="hidden md:flex items-center gap-6 text-sm">
           <Link to="/" className="text-base hover:text-pink-500">首頁</Link>
           <Link to="/all-products" className="text-base hover:text-pink-500">商品總覽</Link>
@@ -51,10 +29,9 @@ const Navbar = () => {
           <Link to="/contact" className="text-base hover:text-pink-500">聯絡我們</Link>
         </div>
 
-        {/* 登入按鈕 */}
         <div className="flex items-center">
-          {isLoggedIn ? (
-            <UserMenu onLogout={handleLogout} />
+          {user ? (
+            <UserMenu onLogout={logout} /> // ✅ 登出時使用 context logout
           ) : (
             <button
               onClick={() => setShowModal(true)}
@@ -66,9 +43,8 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* 浮動登入視窗 */}
       {showModal && (
-        <AuthModal onClose={() => setShowModal(false)} onLogin={handleLogin} />
+        <AuthModal onClose={() => setShowModal(false)} onLogin={login} /> // ✅ 使用 context login
       )}
     </>
   );

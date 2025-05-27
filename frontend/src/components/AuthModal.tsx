@@ -2,38 +2,60 @@ import React, { useState } from "react";
 
 interface AuthModalProps {
   onClose: () => void;
-  onLogin: () => void;
+  onLogin: (token: string, user: any) => void;
 }
 
 const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
-
   const [mode, setMode] = useState<"login" | "register">("login");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setError("");
+
     if (mode === "register") {
       if (password !== confirmPassword) {
-        alert("密碼不一致，請重新確認。");
+        setError("❌ 密碼不一致，請重新確認。");
         return;
       }
 
-      // 未來串接 API
-      // 將 User 輸入的資料儲存到 User 資料庫
+      try {
+        const res = await fetch("http://localhost:3000/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
-      setMode("login");
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "註冊失敗");
+
+        alert("註冊成功，請登入！");
+        setMode("login");
+      } catch (err: any) {
+        setError(err.message);
+      }
     }
 
     if (mode === "login") {
+      try {
+        const res = await fetch("http://localhost:3000/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
-      // 未來串接 API
-      // 連接到 User 資料庫驗證
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "登入失敗");
 
-      onLogin();
+        const { token, user } = data;
+        onLogin(token, user);
+        onClose();
+      } catch (err: any) {
+        setError(err.message);
+      }
     }
   };
 
@@ -87,6 +109,8 @@ const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
               />
             </div>
           )}
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"
