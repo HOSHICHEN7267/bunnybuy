@@ -12,6 +12,7 @@ import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
 import Checkout from './pages/CheckoutPage';
 import MyOrders from './pages/MyOrders';
+import Contact from './pages/Contact';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -29,6 +30,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/purchase-request-list" element={<MyOrders />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </>
   )
