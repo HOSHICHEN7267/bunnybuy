@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Product, CartItem, Order } from "../interfaces";
+import { Order } from "../interfaces";
 
 // type OrderItem = {
 //   productName: string;
