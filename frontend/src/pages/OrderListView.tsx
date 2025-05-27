@@ -9,7 +9,7 @@ import axios from "axios";
 import { MyOrder, Product } from "../interfaces";
 
 import { useAuth } from "../contexts/AuthContext";
-import { YourOrder } from "../interfaces"; 
+
 
 
 const OrderListView = () => {
@@ -196,20 +196,20 @@ const OrderListView = () => {
                     })}
                     </tbody>
                   </table>
-                  <button
-                    onClick={() => {
-                      navigate("/order-confirmation", {
-                        state: { orders: myorders },
-                      });
-                    }}
-                    className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
-                  >
-                    🛒 確認接單
-                  </button>
+
                 </div>
               </div>
             );
           })}
+        <button
+          onClick={() => {
+            navigate("/order-confirmation", {
+            });
+          }}
+          className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
+        >
+          🛒 確認接單
+        </button>
         </div>
       </div>
       <Footer />
