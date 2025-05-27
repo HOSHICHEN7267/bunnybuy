@@ -22,3 +22,14 @@ export interface CartItem {
   quantity: number;
   image: string[];
 }
+
+export interface Order {
+  orderId: string;
+  customerName: string;
+  status: string;
+  total: number;
+  items: {
+    product: Product;
+    count: number;
+  }[];
+};
