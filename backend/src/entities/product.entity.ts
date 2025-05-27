@@ -6,9 +6,6 @@ export class Product {
   product_id: string;
 
   @Column()
-  provider_id: string;
-
-  @Column()
   name: string;
 
   @Column('text')
@@ -20,8 +17,12 @@ export class Product {
   @Column('decimal', { nullable: true })
   discount: number;
 
-  @Column('int')
-  stock: number;
+  @Column('json', { nullable: true })
+  stock_list: {
+    store_name: string;
+    stock: number;
+    provider_id: string;
+  }[];
 
   @Column()
   status: string;
