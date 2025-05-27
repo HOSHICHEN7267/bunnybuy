@@ -7,6 +7,8 @@ interface AuthModalProps {
 
 const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
   const [mode, setMode] = useState<"login" | "register">("login");
+
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -74,6 +76,19 @@ const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
         </h2>
 
         <form className="space-y-4 text-left" onSubmit={handleSubmit}>
+          {mode === "register" && (
+            <div>
+              <label className="text-sm font-medium">使用者名稱</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full border px-3 py-2 rounded mt-1"
+                placeholder="輸入使用者名稱"
+                required
+              />
+            </div>
+          )}
           <div>
             <label className="text-sm font-medium">Email</label>
             <input
