@@ -1,3 +1,4 @@
+// bunnybuy\backend\src\entities\user.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users')
