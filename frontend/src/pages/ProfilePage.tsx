@@ -1,14 +1,13 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useAuth } from '../contexts/AuthContext';
+import { Navigate } from 'react-router-dom'; // ✅ 加入導頁
 
 const ProfilePage = () => {
-  const user = {
-    avatarUrl: 'src/assets/avatar.jpg', // 假設這是用戶頭像的路徑
-    username: '烏薩奇',
-    email: 'usagi@example.com',
-    points: 1200,
-    title: '代購金兔',
-  };
+  const { user } = useAuth(); // ✅ 從 context 取得登入者
+
+  // ✅ 未登入者導回首頁
+  if (!user) return <Navigate to="/" replace />;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -20,7 +19,7 @@ const ProfilePage = () => {
         <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md sm:max-w-lg text-center">
           <div className="flex justify-center mb-4">
             <img
-              src={user.avatarUrl}
+              src="src/assets/avatar.jpg" // ✅ 使用原本預設大頭貼路徑
               alt="Avatar"
               className="w-24 h-24 rounded-full border-4 border-indigo-500 object-cover"
             />
@@ -30,11 +29,11 @@ const ProfilePage = () => {
           <div className="mt-4 text-left space-y-2">
             <div className="flex justify-between border-b pb-1">
               <span className="text-gray-600">點數</span>
-              <span className="font-medium text-indigo-600">{user.points}</span>
+              <span className="font-medium text-indigo-600">{user.points ?? 0}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">稱號</span>
-              <span className="font-medium text-indigo-600">{user.title}</span>
+              <span className="font-medium text-indigo-600">{user.role ?? '一般會員'}</span>
             </div>
           </div>
         </div>

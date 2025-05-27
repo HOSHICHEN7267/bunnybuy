@@ -6,6 +6,7 @@ interface User {
   email: string;
   username: string;
   role?: string;
+  points?: number; // ✅ 新增這行
 }
 
 interface AuthContextType {
