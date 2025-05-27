@@ -28,4 +28,7 @@ export class Product {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @Column('json', { nullable: true })
+  image_list: string[];
 }
