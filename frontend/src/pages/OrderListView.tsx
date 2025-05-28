@@ -24,7 +24,7 @@ const OrderListView = () => {
   //   );
   // };
 
-  const { user } = useAuth(); // 確保有登入資訊
+  const { user, token } = useAuth(); // ✅ 同時取 user 和 token
 
   const handleAcceptOrder = async (orderId: string) => {
     const order = myorders.find((o) => o.request_id === orderId);
@@ -64,7 +64,7 @@ const OrderListView = () => {
         { products: data },
         {
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
