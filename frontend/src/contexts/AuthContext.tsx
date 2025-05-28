@@ -1,20 +1,9 @@
 // src/contexts/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  role?: string;
-  points?: number; // ✅ 新增這行
-}
+import { User,AuthContextType } from '../interfaces'; // 假設 User 介面已經定義在這個路徑
 
-interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  login: (token: string, user: User) => void;
-  logout: () => void;
-}
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

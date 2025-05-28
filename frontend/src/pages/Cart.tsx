@@ -3,6 +3,8 @@ import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
+import { CartItem } from "../interfaces";
+
 const Cart = () => {
   const navigate = useNavigate();
 
@@ -10,9 +12,26 @@ const Cart = () => {
 
   // ✅ 初始讀取 localStorage 中的購物車資料
   useEffect(() => {
-    const storedCart = localStorage.getItem("cartItems");
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
+    try {
+      const storedCart = localStorage.getItem("cartItems");
+      if (storedCart) {
+        const parsed = JSON.parse(storedCart);
+        if (Array.isArray(parsed)) {
+          const validated = parsed.map((item: any) => ({
+            ...item,
+            image_list: Array.isArray(item.image_list) ? item.image_list : [],
+          }));
+          setCartItems(validated);
+        } else {
+          setCartItems([]); // 如果不是陣列就設空
+        }
+      } else {
+        setCartItems([]); // 沒資料也設空
+      }
+    } catch (error) {
+      console.error("⚠️ localStorage 資料壞掉，已清空", error);
+      localStorage.removeItem("cartItems");
+      setCartItems([]);
     }
   }, []);
 
@@ -73,7 +92,7 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map((item) => (
+                {cartItems.map((item: CartItem) => (
                   <tr key={item.product_id} className="align-middle">
                     <td className="flex items-center gap-4">
                       <div

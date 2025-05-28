@@ -49,3 +49,29 @@ export interface MyOrder {
   delivery_address: string;
 
 };
+
+export interface YourOrder {
+  assignment_id: string;
+  product_id: string;
+  quantity: number;
+  request_id: string;
+  agent_id: string;
+  status: string;
+  delivery_date: string;
+};
+
+export interface User {
+  user_id: string;
+  email: string;
+  username: string;
+  role?: string;
+  points?: number; // ✅ 新增這行
+}
+
+
+export interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  login: (token: string, user: User) => void;
+  logout: () => void;
+}

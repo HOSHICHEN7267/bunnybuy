@@ -1,34 +1,56 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Link, useLocation } from "react-router-dom";
-import orderIcon from "../assets/icon-order.png";
+import { Link } from "react-router-dom";
 
-// 多筆訂單資料結構
-type OrderItem = {
-  product_id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  discount: number;
-  image: string[];
-};
-
-type Order = {
-  request_id: string;
-  buyer_id: string;
-  products: OrderItem[];
-  total_price: number;
-  payment: string;
-  created_at: string;
-  status: string;
-};
+import { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
+import { Product, YourOrder } from "../interfaces";
 
 const OrderConfirmationPage = () => {
-  const location = useLocation();
-  const orders = location.state?.orders as Order[];
 
-  if (!orders || orders.length === 0) {
-    return <div className="p-6 text-red-600">❌ 找不到訂單資訊</div>;
+  const { user } = useAuth();
+  const [assignments, setAssignments] = useState<YourOrder[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // 抓取 assignments
+  useEffect(() => {
+    if (!user?.user_id) return;
+
+    const fetchAssignments = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/purchase-assignments?agent_id=${user.user_id}`
+        );
+        setAssignments(res.data);
+      } catch (error) {
+        console.error("取得負責商品失敗", error);
+      }
+    };
+
+    fetchAssignments();
+  }, [user?.user_id]);
+
+  // 抓取所有商品資訊（或根據 assignments 中出現過的 product_id 抓取）
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/products");
+        setProducts(res.data);
+      } catch (error) {
+        console.error("取得商品資料失敗", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const getProductById = (id: string) => {
+    return products.find(p => p.product_id === id);
+  };
+
+  if (!assignments.length) {
+    return <div className="p-6 text-red-600">❌ 找不到接單資訊</div>;
   }
 
   return (
@@ -38,74 +60,58 @@ const OrderConfirmationPage = () => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">我的訂單</h1>
 
         <div className="space-y-8">
-          {orders.map((order) => (
-            <div
-              key={order.request_id}
-              className="border border-gray-300 rounded-lg bg-white shadow-sm overflow-hidden"
-            >
-              {/* 訂單圖片 + 訂單資訊 */}
-              <div className="flex flex-col md:flex-row">
-                <img
-                  src={orderIcon}
-                  alt="訂單圖片"
-                  className="w-full md:w-1/3 object-contain max-h-64 p-4"
-                />
-                <div className="p-6 flex-1">
-                  <p className="text-lg font-medium text-gray-700 mb-2">
-                    訂單編號：{order.request_id}
-                  </p>
-                  <p className="text-sm text-gray-600 mb-1">
-                    客戶：
-                    <Link
-                      to={`/users/${order.buyer_id}`}
-                      className="text-blue-500 underline"
-                    >
-                      {order.buyer_id}
-                    </Link>
-                  </p>
-                  <p className="text-sm text-gray-600">狀態：{order.status}</p>
-                  <p className="text-sm text-gray-600">付款方式：{order.payment}</p>
-                  <p className="text-lg font-bold text-gray-800 mt-4">
-                    總金額：${order.total_price}
-                  </p>
-                </div>
-              </div>
-
-              {/* 商品明細 */}
-              <div className="px-6 pt-4 pb-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                  商品明細
-                </h2>
-                <table className="w-full text-sm text-gray-700 border-t">
-                  <thead>
-                    <tr className="text-left text-gray-600">
-                      <th className="py-2">商品名稱</th>
-                      <th>數量</th>
-                      <th>價格</th>
-                      <th>小計</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order.products.map((item, idx) => (
-                      <tr key={idx} className="border-t">
+          {assignments.map((item) => {
+            const product = getProductById(item.product_id);
+            return (
+              <div
+                key={`${item.request_id}-${item.product_id}`}
+                className="border border-gray-300 rounded-lg bg-white shadow-sm overflow-hidden"
+              >
+                {/* 商品明細 */}
+                <div className="px-6 pt-4 pb-6">
+                  <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                    商品明細
+                  </h2>
+                  <table className="w-full text-sm text-gray-700 border-t">
+                    <thead>
+                      <tr className="text-left text-gray-600">
+                        <th className="py-2">商品名稱</th>
+                        <th>數量</th>
+                        <th>價格</th>
+                        <th>小計</th>
+                        <th>狀態 (你的任務)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-t">
                         <td className="py-2">
-                          <Link
-                            to={`/product-detail/${item.product_id}`}
-                            className="text-blue-500 underline"
-                          >
-                            {item.name}
-                          </Link>
+                          {product ? (
+                            <Link
+                              to={`/product-detail/${item.product_id}`}
+                              className="text-blue-500 underline"
+                            >
+                              {product.name}
+                            </Link>
+                          ) : (
+                            "讀取中..."
+                          )}
                         </td>
                         <td>{item.quantity}</td>
-                        <td>${item.price}</td>
-                        <td>${item.quantity * item.price}</td>
+                        <td>${product?.discount ?? "?"}</td>
+                        <td>
+                          $
+                          {product
+                            ? item.quantity * product.discount
+                            : "?"}
+                        </td>
+                        <td>{item.status}</td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <Footer />
