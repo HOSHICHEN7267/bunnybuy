@@ -59,3 +59,19 @@ export interface YourOrder {
   status: string;
   delivery_date: string;
 };
+
+export interface User {
+  user_id: string;
+  email: string;
+  username: string;
+  role?: string;
+  points?: number; // ✅ 新增這行
+}
+
+
+export interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  login: (token: string, user: User) => void;
+  logout: () => void;
+}
