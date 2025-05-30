@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { useEffect} from "react";
@@ -10,6 +10,8 @@ import { MyOrder, Product } from "../interfaces";
 
 import { useAuth } from "../contexts/AuthContext";
 
+
+import ConfirmModal from "../components/ConfirmModal";
 
 
 const OrderListView = () => {
@@ -89,6 +91,8 @@ const OrderListView = () => {
           return updated;
       });
   };
+  const [confirmOrderId, setConfirmOrderId] = useState<string | null>(null);
+
   const [myorders, setMyOrders] = useState<MyOrder[]>([]);
   const [productsMap, setProductsMap] = useState<Map<string, Product>>(new Map());
   useEffect(() => {
@@ -138,7 +142,7 @@ const OrderListView = () => {
                       訂單編號：{order.request_id}
                     </p>
                     <p className="text-sm text-gray-500">
-                      客戶：{order.buyer_id} ｜ 付款方式：{order.payment}
+                      客戶：{order.buyer_name} ｜ 付款方式：{order.payment}
                     </p>
                   </div>
                   <div className="text-right text-lg text-gray-600">
@@ -147,7 +151,7 @@ const OrderListView = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleAcceptOrder(order.request_id);
+                      setConfirmOrderId(order.request_id); // ➤ 開啟 modal
                     }}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ml-4"
                   >
@@ -187,7 +191,18 @@ const OrderListView = () => {
 
                       return (
                         <tr key={index} className="border-t">
-                          <td className="py-2">{product.name}</td>
+                            <td className="py-2">
+                            {product ? (
+                              <Link
+                                to={`/product-detail/${item.product_id}`}
+                                className="text-blue-500 underline"
+                              >
+                                {product.name}
+                              </Link>
+                            ) : (
+                              "讀取中..."
+                            )}
+                          </td>
                           <td>{item.quantity}</td>
                           <td>${product.discount}</td>
                           <td>{item.status}</td>
@@ -203,14 +218,24 @@ const OrderListView = () => {
           })}
         <button
           onClick={() => {
-            navigate("/order-confirmation", {
+            navigate("/purchase-assign-list", {
             });
           }}
           className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
         >
-          🛒 確認接單
+          🛒 查看接單
         </button>
         </div>
+        {confirmOrderId && (
+          <ConfirmModal
+            message="你確定要接下這筆訂單嗎？"
+            onCancel={() => setConfirmOrderId(null)}
+            onConfirm={() => {
+              handleAcceptOrder(confirmOrderId);
+              setConfirmOrderId(null);
+            }}
+          />
+        )}
       </div>
       <Footer />
     </>
