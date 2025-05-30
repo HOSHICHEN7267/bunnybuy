@@ -7,12 +7,16 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards ,
+  Request,
 } from '@nestjs/common';
 import { PurchaseRequestService } from './purchase-request.service';
 import {
   CreatePurchaseRequestDto,
   UpdatePurchaseRequestDto,
 } from './dto/purchase-request.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // 確保這路由有登入保護
+
 
 @Controller('purchase-requests')
 export class PurchaseRequestController {
@@ -26,6 +30,13 @@ export class PurchaseRequestController {
   @Get()
   findAll() {
     return this.service.findAll();
+  }
+
+  @Get('my') // 👈 加上這個 API 只拿自己的訂單
+  @UseGuards(JwtAuthGuard) // 🔐 僅限登入用戶
+  getMyOrders(@Request() req) {
+    const userId = req.user.user_id; // 假設 JWT payload 裡有 user_id
+    return this.service.findByBuyerId(userId);
   }
 
   @Get(':id')

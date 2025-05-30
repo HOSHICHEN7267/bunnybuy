@@ -33,6 +33,13 @@ export class PurchaseRequestService {
   findAll() {
     return this.repo.find();
   }
+    // ✅ 新增：根據 buyer_id 過濾
+  async findByBuyerId(buyerId: string) {
+    return this.repo.find({
+      where: { buyer_id: buyerId },
+      order: { created_at: 'DESC' },
+    });
+  }
 
   findOne(id: string) {
     return this.repo.findOne({
