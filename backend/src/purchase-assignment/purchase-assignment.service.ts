@@ -25,6 +25,13 @@ export class PurchaseAssignmentService {
     return this.repo.find();
   }
 
+  // ✅ 新增：根據 agent_id 過濾
+  async findByAgent(agentId: string) {
+  return this.repo.find({
+    where: { agent_id: agentId },
+  });
+}
+
   findOne(id: string) {
     return this.repo.findOneBy({ assignment_id: id });
   }

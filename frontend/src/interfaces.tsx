@@ -37,6 +37,7 @@ export interface Order {
 export interface MyOrder {
   request_id: string;
   buyer_id: string;
+  buyer_name: string;
   products: {
     product_id: string;
     quantity: number;

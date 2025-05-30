@@ -40,6 +40,7 @@ const Checkout = () => {
     try {
       const payload: Omit<MyOrder, "request_id" | "created_at"> = {
         buyer_id: user?.user_id || "aaa", // 從登入資訊抓，或你要用 localStorage 暫存
+        buyer_name: user?.username || form.name,
         payment: form.payment,
         delivery_method: form.delivery_method,
         delivery_address: form.address,

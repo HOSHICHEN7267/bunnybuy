@@ -14,6 +14,9 @@ export class PurchaseRequest {
   @Column()
   buyer_id: string;
 
+  @Column()
+  buyer_name: string;
+
   @Column('json')
   products: {
     product_id: string;
