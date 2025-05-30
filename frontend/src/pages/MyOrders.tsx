@@ -27,25 +27,25 @@ const MyOrders = () => {
     const [productsMap, setProductsMap] = useState<Map<string, Product>>(new Map());
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [ordersRes, productsRes] = await Promise.all([
-                    axios.get("http://localhost:3000/purchase-requests"),
-                    axios.get("http://localhost:3000/products"),
-                ]);
-                console.log("Fetched orders:", ordersRes.data);
-                console.log("Fetched products:", productsRes.data);
+    const fetchData = async () => {
+        try {
+        const [ordersRes, productsRes] = await Promise.all([
+            axios.get("http://localhost:3000/purchase-requests/my", {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            }),
+            axios.get("http://localhost:3000/products"),
+        ]);
 
-                setMyOrders(ordersRes.data);
-
-                setProductsMap(new Map<string, Product>(
-                  (productsRes.data as Product[]).map(p => [p.product_id, p])
-                ));
-            } 
-            catch (error) {
-                console.error("Fetching error:", error);
-            }
-        };
+        setMyOrders(ordersRes.data);
+        setProductsMap(new Map<string, Product>(
+            (productsRes.data as Product[]).map(p => [p.product_id, p])
+        ));
+        } catch (error) {
+        console.error("Fetching error:", error);
+        }
+    };
 
     fetchData();
     }, []);
