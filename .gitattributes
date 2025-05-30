@@ -1,0 +1,13 @@
+# 統一文字檔的換行符為 LF
+* text=auto eol=lf
+
+# 明確指定常用副檔名為 LF
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.sh   text eol=lf
+*.md   text eol=lf
