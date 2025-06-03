@@ -66,7 +66,7 @@ const UserMenu = ({ onLogout }: { onLogout: () => void }) => {
           </button>
 
           <button
-            onClick={() => navigate("/purchase-assign-list")}
+            onClick={() => navigate("/bunny-buy")}
             className="w-full text-left flex items-center px-4 py-2 text-sm hover:bg-gray-50"
           >
             <img src={bunny} alt="Cart" className="w-4 h-4 mr-2" />

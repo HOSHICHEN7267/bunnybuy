@@ -55,7 +55,7 @@ const MyOrders = () => {
             <Navbar />
             <div className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-6 min-h-screen">
                 <div className="space-y-5">
-                    <h2 className="text-lg font-semibold mt-6 text-left">My Orders</h2>
+                    <h2 className="text-lg font-semibold mt-6 text-left">幫我買訂單</h2>
                     <div className="max-w-5xl border-t border-gray-300 text-sm">
                         {myorders.map((order: MyOrder) => (
                             <div key={order.request_id} className="border-b border-gray-300">
@@ -71,7 +71,7 @@ const MyOrders = () => {
                                             alt="box_icon"
                                         />
                                         <p className="flex flex-col gap-3">
-                                            <span className="font-medium text-base">
+                                            <span className="font-medium text-base truncate whitespace-nowrap overflow-hidden max-w-[180px]">
                                                 {order.products.map((item) => {
                                                     const product = productsMap.get(item.product_id);
                                                     const name = product?.name || "Unknown";
@@ -96,13 +96,13 @@ const MyOrders = () => {
                                 {/* 展開內容 */}
                                 {expandedOrders.has(order.request_id) && (
                                     <div className="px-4 overflow-hidden transition-all duration-300 ease-in-out max-h-96 pb-4">
-                                        <table className="w-full mt-2 text-sm text-gray-700">
+                                        <table className="table-fixed w-full mt-2 text-sm text-gray-700">
                                             <thead className="bg-gray-100 text-gray-700 border-b text-sm">
                                                 <tr>
                                                     <th className="py-3 text-left">商品</th>
                                                     <th className="text-center">數量</th>
                                                     <th className="text-center">價格</th>
-                                                    <th className="text-left">小計</th>
+                                                    <th className="text-center">小計</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -123,7 +123,9 @@ const MyOrders = () => {
                                                                 alt={product?.name}
                                                                 className="w-10 h-10 rounded object-cover border"
                                                             />
-                                                            <span>{product?.name || "Unknown Product"}</span>
+                                                            <span className="truncate whitespace-nowrap overflow-hidden max-w-[180px]">
+                                                                {product?.name || "Unknown Product"}
+                                                            </span>
                                                         </td>
                                                         <td className="text-center">{item.quantity}</td>
                                                         <td>
