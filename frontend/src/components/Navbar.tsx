@@ -25,7 +25,7 @@ const Navbar = () => {
           <Link to="/" className="text-base hover:text-pink-500">首頁</Link>
           <Link to="/all-products" className="text-base hover:text-pink-500">商品總覽</Link>
           <Link to="/order-list" className="text-base hover:text-pink-500">訂單總覽</Link>
-          <Link to="/about" className="text-base hover:text-pink-500">關於我們</Link>
+          {/* <Link to="/about" className="text-base hover:text-pink-500">關於我們</Link> */}
           <Link to="/contact" className="text-base hover:text-pink-500">聯絡我們</Link>
         </div>
 
