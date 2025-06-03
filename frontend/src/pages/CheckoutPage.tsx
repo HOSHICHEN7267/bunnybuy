@@ -87,7 +87,10 @@ const Checkout = () => {
                     className="w-16 h-16 object-contain rounded"
                   />
                   <div className="flex-1">
-                    <p className="font-medium">{item.name} × {item.quantity}</p>
+                    <span className="font-medium truncate whitespace-nowrap overflow-hidden max-w-[150px] inline-block align-middle">
+                      {item.name}
+                    </span>
+                    <span className="font-medium"> × {item.quantity}</span>
                   </div>
                   <div className="text-right font-medium">
                     ${item.discount * item.quantity}

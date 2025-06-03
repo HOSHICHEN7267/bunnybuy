@@ -8,9 +8,10 @@ import OrderListView from './pages/OrderListView';
 import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
 import Checkout from './pages/CheckoutPage';
-import OrderConfirmationPage from "./pages/OrderConfirmationPage";
+import BunnyBuy from "./pages/BunnyBuy";
 import MyOrders from './pages/MyOrders';
 import Contact from './pages/Contact';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 
 import { AuthProvider } from './contexts/AuthContext';
@@ -24,12 +25,27 @@ function App() {
         <Route path="/order-list" element={<OrderListView />} />
         <Route path="/all-products" element={<AllProducts />} />
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/orderconfirm" element={<OrderConfirmationPage />} />
 
         {/* PrivateRoutes */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/bunny-buy"
+          element={
+            <PrivateRoute>
+              <BunnyBuy />
+            </PrivateRoute>
+          }
+        />
 
         <Route
           path="/purchase-request-list"
@@ -40,10 +56,10 @@ function App() {
           }
         />
         <Route
-          path="/profile"
+          path="/cart"
           element={
             <PrivateRoute>
-              <ProfilePage />
+              <Cart />
             </PrivateRoute>
           }
         />

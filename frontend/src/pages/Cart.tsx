@@ -109,7 +109,7 @@ const Cart = () => {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-medium">{item.name}</span>
+                        <span className="font-medium truncate whitespace-nowrap overflow-hidden max-w-[180px]">{item.name}</span>
                         <button
                           className="text-xs text-red-500 hover:underline w-20 h-8 text-center"
                           onClick={() => removeItem(item.product_id)}

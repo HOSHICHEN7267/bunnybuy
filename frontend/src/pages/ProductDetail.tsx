@@ -95,7 +95,7 @@ const ProductDetail = () => {
                 </div>
 
                 <div className="flex flex-col">
-                    <h1 className="text-3xl font-medium text-gray-800/90 mb-4 text-left">
+                    <h1 className="text-3xl font-medium text-gray-800/90 mb-4 text-left truncate whitespace-nowrap overflow-hidden max-w-[450px]">
                         {product.name}
                     </h1>
                     <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ const ProductDetail = () => {
                         </div>
                         <p>(4/5)</p>
                     </div>
-                    <p className="text-gray-600 mt-3 text-left">
+                    <p className="text-gray-600 mt-3 text-left max-w-[450px] break-all">
                         {product.description}
                     </p>
                     <p className="text-3xl font-medium mt-6 text-left">
