@@ -1,22 +1,77 @@
 import Navbar from "../components/Navbar";
 import HeaderSlider from "../components/HeaderSlider";
 import Footer from "../components/Footer";
+import ProductCard from "../components/ProductCard"; // 用你已經做好的卡片元件
+import { Product } from "../interfaces";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const HomePage = () => {
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/products") // ⬅️ 請確認這裡是你的後端 base URL
+      .then((response) => {
+        setProducts(response.data);
+        console.log("Fetched products:", response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch products:", error);
+      });
+  }, []);
+
   return (
     <>
       <Navbar />
+
+      {/* Featured Section */}
+      <section className="px-6 md:px-16 lg:px-32 py-12 bg-gray-50">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
+            🔥 精選商品
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">精挑細選，熱門推薦</p>
+          <div className="w-16 h-1 bg-pink-500 mt-2 mx-auto rounded-full"></div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products
+            .filter((product: Product) => product.product_id === "07a52d6c-4fe6-467d-8aea-a17727f055cd" || product.product_id === "84f421f2-3c12-4fde-acc9-bd3de2ca5640" || product.product_id === "ea425391-dc0b-47d0-94e1-9c601612e089" || product.product_id === "bd9e4b90-5360-4866-8023-88f50b3cc5cb")
+            .map((product, index) => (<ProductCard key={index} product={product} />))}
+        </div>
+      </section>
+
       <HeaderSlider />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-        <h1 className="text-4xl font-bold text-gray-800">Welcome to BunnyBuy!</h1>
-        <p className="mt-4 text-lg text-gray-600">Your global shopping partner.</p>
-        <a
-          href="/order-list"
-          className="mt-6 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition"
-        >
-          查看採購池
-        </a>
-      </div>
+
+      {/* 在 HomePage 函數內 return 的 JSX 中 Featured Section 和 HeaderSlider 中間加上：*/}
+      <section className="px-6 md:px-16 lg:px-32 py-12 bg-gray-50">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
+            🎯 熱門分類
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">快速導覽熱門代購品類</p>
+          <div className="w-16 h-1 bg-orange-500 mt-2 mx-auto rounded-full"></div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+          {[
+            { name: "美妝保養", emoji: "💄" },
+            { name: "3C 電子", emoji: "💻" },
+            { name: "服飾穿搭", emoji: "👕" },
+            { name: "母嬰用品", emoji: "🍼" },
+            { name: "遊戲娛樂", emoji: "🎮" },
+            { name: "保健食品", emoji: "🧴" },
+          ].map((category, index) => (
+            <div
+              key={index}
+              className="bg-white hover:bg-pink-50 transition rounded-lg p-6 text-center shadow-sm cursor-pointer border border-gray-200 hover:border-pink-400"
+            >
+              <div className="text-3xl mb-2">{category.emoji}</div>
+              <div className="text-sm font-semibold text-gray-700">{category.name}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <Footer />
     </>
   );
