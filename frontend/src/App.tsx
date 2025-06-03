@@ -26,11 +26,25 @@ function App() {
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/purchase-assign-list" element={<OrderConfirmationPage />} />
-        <Route path="/purchase-request-list" element={<MyOrders />} />
         <Route path="/contact" element={<Contact />} />
-        
-        {/* ✅ 受保護的頁面 */}
+
+        {/* PrivateRoutes */}
+        <Route
+          path="/purchase-assign-list"
+          element={
+            <PrivateRoute>
+              <OrderConfirmationPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/purchase-request-list"
+          element={
+            <PrivateRoute>
+              <MyOrders />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/profile"
           element={
@@ -40,7 +54,6 @@ function App() {
           }
         />
         
-
       </Routes>
     </AuthProvider>
   );
