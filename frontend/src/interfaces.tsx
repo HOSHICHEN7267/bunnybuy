@@ -73,6 +73,7 @@ export interface User {
 export interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string, user: User) => void;
+  loading: boolean; // 新增這一行
+  login: (jwt: string, user: User) => void;
   logout: () => void;
 }
