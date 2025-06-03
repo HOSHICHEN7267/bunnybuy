@@ -42,6 +42,4 @@ export class PurchaseRequest {
   @Column({ nullable: true })
   delivery_address: string;
 
-  @Column()
-  status: string;
 }
