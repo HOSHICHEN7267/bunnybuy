@@ -1,10 +1,25 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { MyOrder, Product, SelectedProduct } from "../interfaces";
 import { useAuth } from "../contexts/AuthContext";
+
+const getStatusStyle = (status: string) => {
+  switch (status) {
+    case "幫你買":
+      return "bg-yellow-200 font-semibold text-yellow-700 border border-yellow-100";
+    case "幫你了":
+      return "bg-green-200 text-green-700 border border-green-100";
+    case "不幫了":
+      return "bg-red-200 text-red-700 border border-red-100";
+    case "幫你找":
+      return "bg-sky-200 text-blue-700 border border-blue-100";
+    default:
+      return "bg-gray-100 text-gray-600 border border-gray-100";
+  }
+};
 
 const OrderListView = () => {
   const navigate = useNavigate();
@@ -92,7 +107,7 @@ const OrderListView = () => {
         <div className="space-y-4">
           {myorders.map((order) => {
             /* 只保留待處理商品 */
-            const visibleProducts = order.products.filter(p => p.status === "待處理");
+            const visibleProducts = order.products.filter(p => p.status === "幫你找");
             if (visibleProducts.length === 0) return null;        // 全部被接走就不顯示
 
             const isExpanded = expandedOrderIds.has(order.request_id);
@@ -128,7 +143,7 @@ const OrderListView = () => {
                         {order.products.map((item) => {
                           const key        = `${order.request_id}_${item.product_id}`;
                           const product    = productsMap.get(item.product_id);
-                          const isPending  = item.status === "待處理";
+                          const isPending  = item.status === "幫你找";
                           const isChecked  = selectedItems.has(key);
 
                           /* 行樣式：待處理 => 正常；已接單 => 灰底灰字 */
@@ -162,13 +177,12 @@ const OrderListView = () => {
                               <td className="text-green-600 font-medium">
                                 ${(product?.discount ?? 0) * item.quantity}
                               </td>
-                              <td className="text-center">
-                                {isPending ? (
-                                  <span className="text-yellow-600">{item.status}</span>
-                                ) : (
-                                  <span className="text-gray-400">{item.status}</span>
-                                )}
+                              <td>
+                                <span className={`px-2 py-1 rounded ${getStatusStyle(item.status)}`}>
+                                  {item.status}
+                                </span>
                               </td>
+                              {/* --- 接單勾選框 --- */}
                               <td className="py-3 text-center">
                                 <input
                                   type="checkbox"
@@ -198,7 +212,7 @@ const OrderListView = () => {
           onClick={goToConfirm}
           className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700"
         >
-          🛒 查看接單
+          🛒 確認接單
         </button>
       </div>
       <Footer />

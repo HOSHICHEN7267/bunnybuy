@@ -42,10 +42,6 @@ export class PurchaseRequest {
   @Column({ nullable: true })
   delivery_address: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['待處理', '進行中', '完成', '取消'],
-    default: '待處理',
-  })
+  @Column()
   status: string;
 }

@@ -15,7 +15,7 @@ export class PurchaseAssignmentService {
   create(data: CreatePurchaseAssignmentDto) {
     const assignment = this.repo.create({
       ...data,
-      status: data.status ?? '已接受',  // 預設為「已接受」
+      status: data.status ?? '幫你買',  // 預設為「已接受」
     });
 
     return this.repo.save(assignment);
