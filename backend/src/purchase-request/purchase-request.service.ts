@@ -1,4 +1,3 @@
-// bunnybuy\backend\src\purchase-request\purchase-request.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,25 +14,27 @@ export class PurchaseRequestService {
     private readonly repo: Repository<PurchaseRequest>,
   ) {}
 
+  /* --------- 建立 --------- */
   async create(data: CreatePurchaseRequestDto) {
     const productsWithStatus = data.products.map(p => ({
       ...p,
-      status: p.status ?? '幫你找',
+      status: p.status ?? '幫你找',   // ✅ 僅對商品預設
     }));
 
     const entity = this.repo.create({
       ...data,
       products: productsWithStatus,
-      status: data.status ?? '幫你找',
+      // ⛔ 不再有 entity.status
     });
 
     return this.repo.save(entity);
   }
 
+  /* --------- 讀 --------- */
   findAll() {
     return this.repo.find();
   }
-    // ✅ 新增：根據 buyer_id 過濾
+
   async findByBuyerId(buyerId: string) {
     return this.repo.find({
       where: { buyer_id: buyerId },
@@ -42,11 +43,10 @@ export class PurchaseRequestService {
   }
 
   findOne(id: string) {
-    return this.repo.findOne({
-      where: { request_id: id },
-    });
+    return this.repo.findOne({ where: { request_id: id } });
   }
 
+  /* --------- 更新 --------- */
   async update(id: string, data: Partial<UpdatePurchaseRequestDto>) {
     if (data.products) {
       data.products = data.products.map(p => ({
@@ -58,8 +58,8 @@ export class PurchaseRequestService {
     return this.findOne(id);
   }
 
+  /* --------- 刪 --------- */
   remove(id: string) {
     return this.repo.delete(id);
   }
 }
-
