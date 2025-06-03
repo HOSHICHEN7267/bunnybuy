@@ -6,18 +6,7 @@ import Footer from "../components/Footer";
 import { useAuth } from "../contexts/AuthContext";
 import { Product, SelectedProduct } from "../interfaces";
 
-const getStatusStyle = (status: string) => {
-  switch (status) {
-    case "幫你買":
-      return "bg-yellow-200 font-semibold text-yellow-700 border border-yellow-100";
-    case "幫你了":
-      return "bg-green-200 text-green-700 border border-green-100";
-    case "不幫了":
-      return "bg-red-200 text-red-700 border border-red-100";
-    default:
-      return "bg-gray-100 text-gray-600 border border-gray-100";
-  }
-};
+
 
 const OrderConfirmationPage = () => {
   const { user } = useAuth();
