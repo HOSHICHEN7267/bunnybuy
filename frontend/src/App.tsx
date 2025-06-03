@@ -11,7 +11,7 @@ import Checkout from './pages/CheckoutPage';
 import BunnyBuy from "./pages/BunnyBuy";
 import MyOrders from './pages/MyOrders';
 import Contact from './pages/Contact';
-// import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 
 import { AuthProvider } from './contexts/AuthContext';
@@ -27,6 +27,7 @@ function App() {
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/orderconfirm" element={<OrderConfirmationPage />} />
 
         {/* PrivateRoutes */}
         <Route
@@ -45,6 +46,7 @@ function App() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/purchase-request-list"
           element={

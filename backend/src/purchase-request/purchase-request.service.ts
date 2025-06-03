@@ -18,13 +18,13 @@ export class PurchaseRequestService {
   async create(data: CreatePurchaseRequestDto) {
     const productsWithStatus = data.products.map(p => ({
       ...p,
-      status: p.status ?? '待處理',
+      status: p.status ?? '幫你找',
     }));
 
     const entity = this.repo.create({
       ...data,
       products: productsWithStatus,
-      status: data.status ?? '待處理',
+      status: data.status ?? '幫你找',
     });
 
     return this.repo.save(entity);
@@ -51,7 +51,7 @@ export class PurchaseRequestService {
     if (data.products) {
       data.products = data.products.map(p => ({
         ...p,
-        status: p.status ?? '待處理',
+        status: p.status ?? '幫你找',
       }));
     }
     await this.repo.update(id, data);

@@ -77,3 +77,19 @@ export interface AuthContextType {
   login: (jwt: string, user: User) => void;
   logout: () => void;
 }
+
+export interface SelectedProduct {
+  request_id: string;
+  product_id: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Assignment {
+  request_id: string;
+  product_id: string;
+  quantity: number;
+  agent_id: string;
+  status: string;
+  delivery_date: string;
+}

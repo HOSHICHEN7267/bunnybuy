@@ -48,7 +48,7 @@ const Checkout = () => {
         products: cartItems.map((item) => ({
           product_id: item.product_id,
           quantity: item.quantity,
-          status: "待處理",
+          status: "幫你找",
         })),
       };
 
