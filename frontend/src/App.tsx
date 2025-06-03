@@ -30,14 +30,7 @@ function App() {
         <Route path="/orderconfirm" element={<OrderConfirmationPage />} />
 
         {/* PrivateRoutes */}
-        <Route
-          path="/purchase-assign-list"
-          element={
-            <PrivateRoute>
-              <OrderConfirmationPage />
-            </PrivateRoute>
-          }
-        />
+
         <Route
           path="/purchase-request-list"
           element={
