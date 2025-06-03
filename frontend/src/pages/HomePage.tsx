@@ -6,49 +6,6 @@ import { Product } from "../interfaces";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const featuredProducts: Product[] = [
-  {
-    product_id: "07a52d6c-4fe6-467d-8aea-a17727f055cd",
-    name: "Apple AirPods Pro",
-    description: "最新第二代，支援主動降噪與空間音訊。",
-    price: 7990,
-    discount: 6990,
-    stock_list: [
-      { store_name: "Apple 台灣", stock: 20, provider_id: "user-apple" }
-    ],
-    status: "available",
-    created_at: "2024-01-01T10:00:00Z",
-    image_list: ["/products/airpods_pro/product_details_page_apple_earphone_image1.png"]
-  },
-  {
-    product_id: "84f421f2-3c12-4fde-acc9-bd3de2ca5640",
-    name: "Dr.Jart+ 保濕霜",
-    description: "韓國熱銷修復霜，適合敏感肌，保濕鎮定。",
-    price: 980,
-    discount: 799,
-    stock_list: [
-      { store_name: "韓國 Olive Young", stock: 50, provider_id: "user-kor" }
-    ],
-    status: "available",
-    created_at: "2024-02-15T15:30:00Z",
-    image_list: ["/products/drjart.png"]
-  },
-  {
-    product_id: "ea425391-dc0b-47d0-94e1-9c601612e089",
-    name: "任天堂 Switch 主機",
-    description: "內建馬力歐派對，攜帶型遊戲主機首選。",
-    price: 9980,
-    discount: 8790,
-    stock_list: [
-      { store_name: "日本 Amazon", stock: 15, provider_id: "user-jp" }
-    ],
-    status: "available",
-    created_at: "2024-03-20T08:45:00Z",
-    image_list: ["/products/switch.png"]
-  }
-];
-
-
 const HomePage = () => {
 
   const [products, setProducts] = useState([]);
