@@ -27,6 +27,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/orderconfirm" element={<OrderConfirmationPage />} />
 
         {/* PrivateRoutes */}
         <Route
