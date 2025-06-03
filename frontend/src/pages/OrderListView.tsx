@@ -26,7 +26,7 @@ const OrderListView = () => {
   const { token } = useAuth();
 
   /* ---------- state ---------- */
-  const [myorders, setMyOrders] = useState<MyOrder[]>([]);
+  const [allorders, setAllOrders] = useState<MyOrder[]>([]);
   const [productsMap, setProductsMap] = useState<Map<string, Product>>(new Map());
   const [expandedOrderIds, setExpandedOrders] = useState<Set<string>>(new Set());
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -58,7 +58,7 @@ const OrderListView = () => {
         }),
         axios.get("http://localhost:3000/products"),
       ]);
-      setMyOrders(ordersRes.data);
+      setAllOrders(ordersRes.data);
       setProductsMap(new Map(productsRes.data.map((p: Product) => [p.product_id, p])));
       setSelectedItems(new Set()); // 清掉舊勾選
     } catch (error) {
@@ -76,7 +76,7 @@ const OrderListView = () => {
 
     selectedItems.forEach((key) => {
       const [request_id, product_id] = key.split("_");
-      const order = myorders.find(o => o.request_id === request_id);
+      const order = allorders.find(o => o.request_id === request_id);
       const productItem = order?.products.find(p => p.product_id === product_id);
       const product = productsMap.get(product_id);
 
@@ -105,10 +105,14 @@ const OrderListView = () => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-left">訂單總覽</h1>
 
         <div className="space-y-4">
-          {myorders.map((order) => {
+          {allorders.map((order) => {
             /* 只保留待處理商品 */
             const visibleProducts = order.products.filter(p => p.status === "幫你找");
-            if (visibleProducts.length === 0) return null;        // 全部被接走就不顯示
+            if (visibleProducts.length === 0) return (  // 全部被接走就不顯示
+              <div key={order.request_id} className="border border-gray-300 rounded-lg bg-white shadow-sm p-4">
+                <p className="text-gray-500">訂單編號：{order.request_id} - 全部商品已被接走或取消</p>
+              </div>
+            );
 
             const isExpanded = expandedOrderIds.has(order.request_id);
 
@@ -200,18 +204,16 @@ const OrderListView = () => {
                     </tbody>
                   </table>
                 </div>
+                <button
+                  onClick={goToConfirm}
+                  className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700"
+                >
+                  🛒 確認接單
+                </button>
               </div>
             );
           })}
         </div>
-
-        {/* 右下角按鈕 */}
-        <button
-          onClick={goToConfirm}
-          className="fixed bottom-6 right-6 z-50 px-5 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700"
-        >
-          🛒 確認接單
-        </button>
       </div>
       <Footer />
     </>
