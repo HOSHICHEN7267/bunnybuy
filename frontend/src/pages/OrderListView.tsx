@@ -132,74 +132,72 @@ const OrderListView = () => {
                   <table className="w-full mt-2 border-t pt-2 text-sm">
                     <thead>
                       <tr className="text-left text-gray-600">
-                        <th className="py-2">商品名稱</th>
-                        <th className="py-2 text-center">數量</th>
-                        <th className="py-2 text-center">價格</th>
-                        <th className="py-2 text-center">狀態</th>
-                        <th className="py-2 text-center">接單</th>
+                        <th className="w-2/5 text-left py-3">商品</th>
+                        <th className="w-1/12 text-center">數量</th>
+                        <th className="w-1/12 text-center">價格</th>
+                        <th className="w-1/12 text-center">狀態</th>
+                        <th className="w-1/12 text-center">接單</th>
                       </tr>
                     </thead>
-                      <tbody>
-                        {order.products.map((item) => {
-                          const key        = `${order.request_id}_${item.product_id}`;
-                          const product    = productsMap.get(item.product_id);
-                          const isPending  = item.status === "幫你找";
-                          const isChecked  = selectedItems.has(key);
+                    <tbody>
+                      {order.products.map((item) => {
+                        const key        = `${order.request_id}_${item.product_id}`;
+                        const product    = productsMap.get(item.product_id);
+                        const isPending  = item.status === "幫你找";
+                        const isChecked  = selectedItems.has(key);
 
-                          /* 行樣式：待處理 => 正常；已接單 => 灰底灰字 */
-                          const rowClass   = isPending
-                            ? "border-b hover:bg-gray-50 transition"
-                            : "border-b bg-gray-100 text-gray-400";
+                        /* 行樣式：待處理 => 正常；已接單 => 灰底灰字 */
+                        const rowClass   = isPending
+                          ? "border-b hover:bg-gray-50 transition"
+                          : "border-b bg-gray-100 text-gray-400";
 
-                          return (
-                            <tr key={key} className={rowClass}>
-                              {/* --- 勾選框 --- */}
+                        return (
+                          <tr key={key} className={rowClass}>
+                            {/* --- 勾選框 --- */}
 
-                              {/* --- 商品（圖＋名，可點跳轉） --- */}
-                              <td
-                                className="py-3 flex items-center gap-3 cursor-pointer"
-                                onClick={() => {
-                                  navigate(`/product-detail/${item.product_id}`);
-                                  scrollTo(0, 0);               // 若你原本有這行就保留
-                                }}
-                              >
-                                <img
-                                  src={product?.image_list?.[0] || "/placeholder.png"}
-                                  alt={product?.name}
-                                  className="w-10 h-10 rounded object-cover border"
-                                />
-                                <span>{product?.name ?? "Unknown Product"}</span>
-                              </td>
+                            {/* --- 商品（圖＋名，可點跳轉） --- */}
+                            <td
+                              className="py-3 flex items-center gap-3 cursor-pointer"
+                              onClick={() => {
+                                navigate(`/product-detail/${item.product_id}`);
+                                scrollTo(0, 0);               // 若你原本有這行就保留
+                              }}
+                            >
+                              <img
+                                src={product?.image_list?.[0] || "/placeholder.png"}
+                                alt={product?.name}
+                                className="w-10 h-10 rounded object-cover border"
+                              />
+                              <span className="truncate whitespace-nowrap overflow-hidden max-w-[120px]">{product?.name ?? "Unknown Product"}</span>
+                            </td>
 
-                              {/* --- 數量、價格、小計 --- */}
-                              <td className="text-center">{item.quantity}</td>
+                            {/* --- 數量、價格、小計 --- */}
+                            <td className="text-center">{item.quantity}</td>
 
-                              <td className="text-green-600 font-medium">
-                                ${(product?.discount ?? 0) * item.quantity}
-                              </td>
-                              <td>
-                                <span className={`px-2 py-1 rounded ${getStatusStyle(item.status)}`}>
-                                  {item.status}
-                                </span>
-                              </td>
-                              {/* --- 接單勾選框 --- */}
-                              <td className="py-3 text-center">
-                                <input
-                                  type="checkbox"
-                                  disabled={!isPending}
-                                  checked={isChecked && isPending}
-                                  onChange={() =>
-                                    isPending && toggleItemSelection(order.request_id, item.product_id)
-                                  }
-                                  className={isPending ? "" : "cursor-not-allowed"}
-                                />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-
-
+                            <td className="text-green-600 font-medium">
+                              ${(product?.discount ?? 0) * item.quantity}
+                            </td>
+                            <td>
+                              <span className={`px-2 py-1 rounded ${getStatusStyle(item.status)}`}>
+                                {item.status}
+                              </span>
+                            </td>
+                            {/* --- 接單勾選框 --- */}
+                            <td className="py-3 text-center">
+                              <input
+                                type="checkbox"
+                                disabled={!isPending}
+                                checked={isChecked && isPending}
+                                onChange={() =>
+                                  isPending && toggleItemSelection(order.request_id, item.product_id)
+                                }
+                                className={isPending ? "" : "cursor-not-allowed"}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                   </table>
                 </div>
               </div>
