@@ -12,6 +12,8 @@ const OrderConfirmationPage = () => {
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState<YourOrder[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [editingOrderId, setEditingOrderId] = useState<string | null>(null);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [editingAssignmentId, setEditingAssignmentId] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
@@ -82,6 +84,34 @@ const OrderConfirmationPage = () => {
           },
         }
       );
+
+      const res = await axios.get(`http://localhost:3000/purchase-requests/${editingOrderId}`, {
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const products = res.data.products || [];
+      
+      const updatedProducts = products.map((product: Product) => {
+        if (product.product_id === editingProductId) {
+          return {
+            ...product,
+            status: selectedStatus, // ✅ 替換成你要修改的欄位與值
+          };
+        }
+        return product;
+      });
+
+      // 發送更新請求
+      await axios.patch(`http://localhost:3000/purchase-requests/${editingOrderId}`, {
+          products: updatedProducts,
+      }, {
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+      });
 
       setAssignments((prev) =>
         prev.map((item) =>
@@ -210,6 +240,8 @@ const OrderConfirmationPage = () => {
                                         }`}
                                         disabled={item.status !== "幫你買"}
                                         onClick={() => {
+                                          setEditingOrderId(item.request_id);
+                                          setEditingProductId(item.product_id);
                                           setEditingAssignmentId(item.assignment_id);
                                           setSelectedStatus(item.status);
                                         }}

@@ -37,6 +37,11 @@ const Checkout = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if(!form.name || !form.phone || !form.address) {
+      alert("請填寫所有聯絡資訊！");
+      return;
+    }
+
     try {
       const payload: Omit<MyOrder, "request_id" | "created_at"> = {
         buyer_id: user?.user_id || "aaa", // 從登入資訊抓，或你要用 localStorage 暫存
