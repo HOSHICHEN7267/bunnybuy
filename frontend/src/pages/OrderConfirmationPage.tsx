@@ -91,7 +91,7 @@ const OrderConfirmationPage = () => {
       );
 
       alert("✅ 成功接單！");
-      navigate("/order-list");   // 返回清單，自動重新 fetch
+      navigate("/bunny-buy");   // 返回清單，自動重新 fetch
     } catch (err) {
       console.error("❌ 接單失敗", err);
       alert("❌ 接單失敗，請稍後再試");
@@ -118,27 +118,38 @@ const OrderConfirmationPage = () => {
                   <h2 className="text-lg font-semibold mb-2">訂單編號：{item.request_id}</h2>
 
                   {/* 商品明細 */}
-                  <table className="w-full text-sm border-t">
+                  <table className="w-full mt-2 border-t pt-2 text-sm">
                     <thead>
                       <tr className="text-left text-gray-600 bg-gray-50">
-                        <th className="py-2">商品</th><th className="text-center">數量</th><th className="text-center">價格</th><th className="text-left">小計</th>
+                        <th className="w-5/12 text-left py-3">商品</th>
+                        <th className="w-2/12 text-center">數量</th>
+                        <th className="w-2/12 text-center">價格</th>
+                        <th className="w-3/12 text-center">小計</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-t hover:bg-gray-50 cursor-pointer"
-                          onClick={() => { navigate(`/product-detail/${item.product_id}`); scrollTo(0, 0); }}>
-                        {/* 圖＋名 */}
-                        <td className="py-3 flex items-center gap-3">
+                      <tr
+                        className="border-t hover:bg-gray-50 cursor-pointer"
+                        onClick={() => {
+                          navigate(`/product-detail/${item.product_id}`);
+                          scrollTo(0, 0);
+                        }}
+                      >
+                        <td className="py-3 flex items-center gap-3 text-left">
                           <img
                             src={product?.image_list?.[0] || "/placeholder.png"}
                             alt={product?.name}
                             className="w-10 h-10 rounded object-cover border"
                           />
-                          <span>{product?.name ?? "Unknown Product"}</span>
+                          <span className="truncate whitespace-nowrap overflow-hidden max-w-[120px]">
+                            {product?.name ?? "Unknown Product"}
+                          </span>
                         </td>
                         <td className="text-center">{item.quantity}</td>
                         <td className="text-center">${item.price}</td>
-                        <td className="text-green-600 font-medium">${item.quantity * item.price}</td>
+                        <td className="text-center text-green-600 font-medium">
+                          ${item.quantity * item.price}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
