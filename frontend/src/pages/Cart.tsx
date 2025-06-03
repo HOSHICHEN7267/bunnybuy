@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
+import arrow_right_icon_colored from "../assets/arrow_right_icon_colored.svg";
 import { CartItem } from "../interfaces";
 
 const Cart = () => {
@@ -159,6 +159,15 @@ const Cart = () => {
                 前往結帳
               </button>
             </div>
+
+            <button onClick={()=> navigate('/all-products')} className="group flex items-center mt-6 gap-2 text-orange-600 bg-white">
+              <img
+              className="group-hover:-translate-x-1 transition"
+              src={arrow_right_icon_colored}
+              alt="arrow_right_icon_colored"
+              />
+              Continue Shopping
+            </button>
           </div>
         )}
       </div>

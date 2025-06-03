@@ -209,14 +209,14 @@ const MyOrders = () => {
                                                                             <option value="不幫了">不幫了</option>
                                                                         </>
                                                                     )}
-                                                                    {item.status === "幫你買" && (
+                                                                    {/* {item.status === "幫你買" && (
                                                                         <>
                                                                             <option value="幫你找" disabled>幫你找</option>
                                                                             <option value="幫你買">幫你買</option>
                                                                             <option value="幫你了">幫你了</option>
                                                                             <option value="不幫了" disabled>不幫了</option>
                                                                         </>
-                                                                    )}
+                                                                    )} */}
                                                                 </select>
                                                                 <button
                                                                   className="text-sm text-white bg-pink-500 hover:bg-pink-600 px-2 py-1 rounded"
@@ -234,11 +234,14 @@ const MyOrders = () => {
                                                                 </span>
                                                                 <button
                                                                     className={`text-sm border px-2 py-1 rounded ${
-                                                                    item.status === "幫你找" || item.status === "幫你買"
+                                                                    item.status === "幫你找"
+                                                                    //  || item.status === "幫你買"
                                                                         ? "hover:bg-pink-50 text-pink-500 border-pink-400"
                                                                         : "text-gray-400 border-gray-300 cursor-not-allowed"
                                                                     }`}
-                                                                    disabled={item.status !== "幫你買" && item.status !== "幫你找"}
+                                                                    disabled={item.status !== "幫你找"
+                                                                        //  && item.status !== "幫你買"
+                                                                    }
                                                                     onClick={() => {
                                                                         setEditingOrderId(order.request_id);
                                                                         setEditingProductId(item.product_id);
